@@ -244,18 +244,47 @@ class SignUpPage extends StatelessWidget {
                       height: h * 0.02,
                     ),
                     GestureDetector(
-                      onTap: () {
-                        AuthService.authService
-                            .createAccountWithEmailAndPassword(
-                                controller.txtEmail.text,
-                                controller.txtPassword.text);
+                      onTap: ()
+                      async {
+                        if (controller.txtPassword.text ==
+                            controller.txtConfirmPassword.text) {
+                          await AuthService.authService
+                              .createAccountWithEmailAndPassword(
+                              controller.txtEmail.text,
+                              controller.txtPassword.text);
 
-                        // CloudFireStoreService.cloudFireStoreService
-                        //     .insertUserIntoFireStore();
+                          UserModel user = UserModel(
+                              name: controller.txtName.text,
+                              email: controller.txtEmail.text,
+                              phone: controller.txtPhone.text,
+                              token: "-",
+                              image: "https://img.freepik.com/premium-photo/stylish-man-flat-vector-profile-picture-ai-generated_606187-310.jpg");
 
-                        controller.txtEmail.clear();
-                        controller.txtPassword.clear();
+                          CloudFireStoreService.cloudFireStoreService
+                              .insertUserIntoFireStore(user);
+                          Get.back();
+
+                          controller.txtEmail.clear();
+                          controller.txtPassword.clear();
+                          controller.txtName.clear();
+                          controller.txtConfirmPassword.clear();
+                          controller.txtPhone.clear();
+                        }
                       },
+                      // onTap: () {
+                      //
+                      //   AuthService.authService
+                      //       .createAccountWithEmailAndPassword(
+                      //           controller.txtEmail.text,
+                      //           controller.txtPassword.text);
+                      //
+                      //
+                      //   // CloudFireStoreService.cloudFireStoreService
+                      //   //     .insertUserIntoFireStore();
+                      //
+                      //   controller.txtEmail.clear();
+                      //   controller.txtPassword.clear();
+                      // },
                       child: Container(
                         height: h * 0.06,
                         width: w * 0.86,

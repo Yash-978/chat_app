@@ -1,4 +1,6 @@
+import 'package:chat_app/Controller/Modal/userModal.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+
 class CloudFireStoreService {
   CloudFireStoreService._();
 
@@ -7,13 +9,13 @@ class CloudFireStoreService {
 
   FirebaseFirestore fireStore = FirebaseFirestore.instance;
 
-  Future<void> insertUserIntoFireStore(
-      String name, String email, String image, String token) async {
-    await fireStore.collection("users").doc().set({
-      'name': name,
-      'email': email,
-      'token': token,
-      'image': image,
+  Future<void> insertUserIntoFireStore(UserModel user) async {
+    await fireStore.collection("user").doc().set({
+      'name': user.name,
+      'email': user.email,
+      'token': "--",
+      'image': user.image,
+      'phone': user.phone,
     });
   }
 }

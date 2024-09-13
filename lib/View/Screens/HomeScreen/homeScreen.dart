@@ -1,4 +1,5 @@
 import 'package:chat_app/Services/authService.dart';
+import 'package:chat_app/Services/google_auth_Service.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
@@ -13,8 +14,9 @@ class HomePage extends StatelessWidget {
         title: Text('Home Page'),
         actions: [
           IconButton(
-              onPressed: () {
-                AuthService.authService.getCurrentUser();
+              onPressed: () async {
+                await AuthService.authService.signOutUser();
+                // await GoogleAuthServices.googleAuthServices.si
                 User? user = AuthService.authService.getCurrentUser();
                 if (user == null) {
                   Get.offAndToNamed('/signIn');

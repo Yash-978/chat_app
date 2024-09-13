@@ -403,6 +403,19 @@ class SignInPage extends StatelessWidget {
 
                         GestureDetector(
                           onTap: () async {
+                            if (signInController.formKey.currentState!
+                                .validate()) {
+                              signInController.isChecking?.change(false);
+                              signInController.isHandsUp?.change(false);
+                              signInController.trigFail?.change(false);
+                              signInController.trigSuccess?.change(true);
+                            } else {
+                              signInController.isChecking?.change(false);
+                              signInController.isHandsUp?.change(false);
+                              signInController.trigFail?.change(true);
+                              signInController.trigSuccess?.change(false);
+                            }
+
                             String response = await AuthService.authService
                                 .signInWithEmailAndPassword(
                                     controller.txtEmail.text,
@@ -417,18 +430,7 @@ class SignInPage extends StatelessWidget {
                                 'Email or Password may be wrong,$response',
                               );
                             }
-                            if (signInController.formKey.currentState!
-                                .validate()) {
-                              signInController.isChecking?.change(false);
-                              signInController.isHandsUp?.change(false);
-                              signInController.trigFail?.change(false);
-                              signInController.trigSuccess?.change(true);
-                            } else {
-                              signInController.isChecking?.change(false);
-                              signInController.isHandsUp?.change(false);
-                              signInController.trigFail?.change(true);
-                              signInController.trigSuccess?.change(false);
-                            }
+
                           },
                           child: Container(
                             height: h * 0.06,
