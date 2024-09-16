@@ -1,5 +1,5 @@
 import 'package:chat_app/Services/cloudFireStore_Service.dart';
-import 'package:chat_app/main.dart';
+
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:rive/rive.dart';
@@ -20,7 +20,7 @@ class SignUpPage extends StatelessWidget {
       body: ListView(
         children: [
           SizedBox(
-            height: h * 0.4,
+            height: h * 0.35,
             child: RiveAnimation.asset(
               "assets/Animations/animated_login_character.riv",
               stateMachines: const ["Login Machine"],
@@ -35,7 +35,7 @@ class SignUpPage extends StatelessWidget {
               decoration: BoxDecoration(
                 boxShadow: const [
                   BoxShadow(
-                    color: Colors.black38,
+                    color: Colors.black12,
                     spreadRadius: 5,
                     blurRadius: 10,
                   ),
@@ -77,7 +77,7 @@ class SignUpPage extends StatelessWidget {
                       },
                     ),
                     SizedBox(
-                      height: h * 0.02,
+                      height: h * 0.01,
                     ),
                     TextFormField(
                       onChanged: signInController.moveEyeBall,
@@ -108,7 +108,7 @@ class SignUpPage extends StatelessWidget {
                       },
                     ),
                     SizedBox(
-                      height: h * 0.02,
+                      height: h * 0.01,
                     ),
                     TextFormField(
                       onChanged: signInController.moveEyeBall,
@@ -133,7 +133,7 @@ class SignUpPage extends StatelessWidget {
 
                     ),
                     SizedBox(
-                      height: h * 0.02,
+                      height: h * 0.01,
                     ),
                     TextFormField(
                       onTap: () {
@@ -180,7 +180,7 @@ class SignUpPage extends StatelessWidget {
                       },
                     ),
                     SizedBox(
-                      height: h * 0.02,
+                      height: h * 0.01,
                     ),
                     TextFormField(
                       onTap: () {
@@ -227,7 +227,7 @@ class SignUpPage extends StatelessWidget {
                       },
                     ),
                     SizedBox(
-                      height: h * 0.02,
+                      height: h * 0.01,
                     ),
                     Row(
                       mainAxisAlignment: MainAxisAlignment.start,
@@ -285,7 +285,7 @@ class SignUpPage extends StatelessWidget {
                               image:
                                   "https://img.freepik.com/premium-photo/stylish-man-flat-vector-profile-picture-ai-generated_606187-310.jpg");
 
-                          // AuthService.authService.signOutUser();
+                          AuthService.authService.signOutUser();
 
                           CloudFireStoreService.cloudFireStoreService
                               .insertUserIntoFireStore(user);
@@ -350,7 +350,7 @@ class SignUpPage extends StatelessWidget {
             ),
           ),
           SizedBox(
-            height: h * 0.03,
+            height: h * 0.025,
           ),
           Row(
             mainAxisAlignment: MainAxisAlignment.center,

@@ -249,7 +249,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:rive/rive.dart';
-import 'package:rive/rive.dart' as l1;
+
 import 'package:sign_in_button/sign_in_button.dart';
 
 import '../../../Controller/auth_controller.dart';
@@ -265,7 +265,6 @@ class SignInPage extends StatelessWidget {
   Widget build(BuildContext context) {
     double h = MediaQuery.of(context).size.height;
     double w = MediaQuery.of(context).size.width;
-
     return Scaffold(
       resizeToAvoidBottomInset: false,
       body: Center(
@@ -274,7 +273,8 @@ class SignInPage extends StatelessWidget {
           shrinkWrap: true,
           children: [
             SizedBox(
-              height: h * 0.4,
+              height: h * 0.36,
+              width: w * 1,
               child: RiveAnimation.asset(
                 "assets/Animations/animated_login_character.riv",
                 stateMachines: const ["Login Machine"],
@@ -289,8 +289,8 @@ class SignInPage extends StatelessWidget {
                 decoration: BoxDecoration(
                   boxShadow: const [
                     BoxShadow(
-                      color: Colors.black38,
-                      spreadRadius: 10,
+                      color: Colors.black12,
+                      spreadRadius: 5,
                       blurRadius: 10,
                     ),
                   ],
@@ -400,9 +400,16 @@ class SignInPage extends StatelessWidget {
                             ),
                           ),
                         ),
-
-                        GestureDetector(
-                          onTap: () async {
+                        ElevatedButton(
+                          style: ElevatedButton.styleFrom(
+                              backgroundColor: Colors.blue[200],
+                              minimumSize: Size(w * 0.87, h * 0.06),
+                              maximumSize: Size(w * 0.87, h * 0.06),
+                              shape: StadiumBorder(),
+                              textStyle: TextStyle(
+                                fontSize: 24,
+                              )),
+                          onPressed: () async {
                             if (signInController.formKey.currentState!
                                 .validate()) {
                               signInController.isChecking?.change(false);
@@ -415,6 +422,9 @@ class SignInPage extends StatelessWidget {
                               signInController.trigFail?.change(true);
                               signInController.trigSuccess?.change(false);
                             }
+                            if (signInController.isSignUp.value) return;
+
+                            signInController.isSignUp = true.obs;
 
                             String response = await AuthService.authService
                                 .signInWithEmailAndPassword(
@@ -431,24 +441,76 @@ class SignInPage extends StatelessWidget {
                               );
                             }
                           },
-                          child: Container(
-                            height: h * 0.06,
-                            width: w * 0.8,
-                            decoration: BoxDecoration(
-                              borderRadius: BorderRadius.circular(30),
-                              color: Colors.blue[200],
-                            ),
-                            child: const Center(
-                              child: Text(
-                                "Login",
-                                style: TextStyle(
-                                  fontWeight: FontWeight.bold,
-                                  fontSize: 18,
+                          child: signInController.isSignUp.value
+                              ? Row(
+                                  mainAxisAlignment: MainAxisAlignment.center,
+                                  children: [
+                                    CircularProgressIndicator(
+                                      color: Colors.white,
+                                    ),
+                                    SizedBox(
+                                      width: w * 0.050,
+                                    ),
+                                    Text(
+                                      'Please wait...',
+                                      style: TextStyle(color: Colors.black),
+                                    ),
+                                  ],
+                                )
+                              : Text(
+                                  'Login',
+                                  style: TextStyle(color: Colors.black),
                                 ),
-                              ),
-                            ),
-                          ),
                         ),
+
+                        // GestureDetector(
+                        //   onTap: () async {
+                        //     if (signInController.formKey.currentState!
+                        //         .validate()) {
+                        //       signInController.isChecking?.change(false);
+                        //       signInController.isHandsUp?.change(false);
+                        //       signInController.trigFail?.change(false);
+                        //       signInController.trigSuccess?.change(true);
+                        //     } else {
+                        //       signInController.isChecking?.change(false);
+                        //       signInController.isHandsUp?.change(false);
+                        //       signInController.trigFail?.change(true);
+                        //       signInController.trigSuccess?.change(false);
+                        //     }
+                        //
+                        //     String response = await AuthService.authService
+                        //         .signInWithEmailAndPassword(
+                        //             controller.txtEmail.text,
+                        //             controller.txtPassword.text);
+                        //     User? user =
+                        //         AuthService.authService.getCurrentUser();
+                        //     if (user != null && response == "Success") {
+                        //       Get.offAndToNamed('/home');
+                        //     } else {
+                        //       Get.snackbar(
+                        //         'Sign in Invalid',
+                        //         'Email or Password may be wrong,$response',
+                        //       );
+                        //     }
+                        //   },
+                        //   child: Container(
+                        //     height: h * 0.06,
+                        //     width: w * 0.8,
+                        //     decoration: BoxDecoration(
+                        //       borderRadius: BorderRadius.circular(30),
+                        //       color: Colors.blue[200],
+                        //     ),
+                        //     child: const Center(
+                        //       child: Text(
+                        //         "Login",
+                        //         style: TextStyle(
+                        //           fontWeight: FontWeight.bold,
+                        //           fontSize: 18,
+                        //         ),
+                        //       ),
+                        //     ),
+                        //   ),
+                        // ),
                         /* GestureDetector(
                           onTap: () async {
                             try {

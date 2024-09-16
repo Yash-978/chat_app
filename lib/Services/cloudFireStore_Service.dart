@@ -13,7 +13,7 @@ class CloudFireStoreService {
   FirebaseFirestore fireStore = FirebaseFirestore.instance;
 
   Future<void> insertUserIntoFireStore(UserModel user) async {
-    await fireStore.collection("users").doc().set({
+    await fireStore.collection("users").doc(user.email).set({
       'name': user.name,
       'email': user.email,
       'token': "--",

@@ -1,7 +1,7 @@
 import 'package:chat_app/Modal/userModal.dart';
 import 'package:chat_app/Services/authService.dart';
 import 'package:chat_app/Services/cloudFireStore_Service.dart';
-import 'package:chat_app/Services/google_auth_Service.dart';
+
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
@@ -18,6 +18,7 @@ class HomePage extends StatelessWidget {
               .readCurrentUserFromFireStore(),
           builder: (context, snapshot) {
             Map? data = snapshot.data!.data();
+            print(data);
             UserModel userModel = UserModel.fromMap(data!);
             if (snapshot.hasError) {
               return Center(child: Text(snapshot.error.toString()));
@@ -28,9 +29,15 @@ class HomePage extends StatelessWidget {
               );
             }
             return Column(
+              mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                Text(userModel.email!),
+                CircleAvatar(
+                  radius: 40,
+                  backgroundImage: NetworkImage(userModel.image!),
+                ),
                 Text(userModel.name!),
+                Text(userModel.email!),
+                Text(userModel.phone!),
               ],
             );
           },

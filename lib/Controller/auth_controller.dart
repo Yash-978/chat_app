@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:rive/rive.dart';
+
 // bool _obscure = false;
 // bool obscureText = false;
 class AuthController extends GetxController {
@@ -9,18 +10,19 @@ class AuthController extends GetxController {
   final TextEditingController txtPassword = TextEditingController();
   final TextEditingController txtConfirmPassword = TextEditingController();
   final TextEditingController txtPhone = TextEditingController();
-
 }
 
 class SignInController extends GetxController {
   final GlobalKey<FormState> formKey = GlobalKey<FormState>();
   RxBool obscure = false.obs;
   final RxBool _obscure = false.obs;
-  RxBool rememberMeCheck=false.obs;
+  RxBool rememberMeCheck = false.obs;
+  RxBool isSignUp = false.obs;
 
   void obscureCheck() {
     _obscure.value = !_obscure.value;
   }
+
   SMIInput<bool>? isChecking;
   SMIInput<bool>? isHandsUp;
   SMIInput<bool>? trigSuccess;
@@ -44,7 +46,8 @@ class SignInController extends GetxController {
   }
 
   void onInitStateMachine(Artboard artBoard) {
-    stateMachineController = StateMachineController.fromArtboard(artBoard, "Login Machine");
+    stateMachineController =
+        StateMachineController.fromArtboard(artBoard, "Login Machine");
     if (stateMachineController == null) return;
     artBoard.addController(stateMachineController!);
     isChecking = stateMachineController?.findInput("isChecking");
