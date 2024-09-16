@@ -422,7 +422,7 @@ class SignInPage extends StatelessWidget {
                                     controller.txtPassword.text);
                             User? user =
                                 AuthService.authService.getCurrentUser();
-                            if (user != null && response == "success") {
+                            if (user != null && response == "Success") {
                               Get.offAndToNamed('/home');
                             } else {
                               Get.snackbar(
@@ -430,7 +430,6 @@ class SignInPage extends StatelessWidget {
                                 'Email or Password may be wrong,$response',
                               );
                             }
-
                           },
                           child: Container(
                             height: h * 0.06,

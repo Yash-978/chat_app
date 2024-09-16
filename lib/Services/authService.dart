@@ -71,12 +71,13 @@ class AuthService {
       await _firebaseAuth.signInWithEmailAndPassword(
           email: email, password: password);
       log('User signed in successfully: $email');
+      return "Success";
     } on FirebaseAuthException catch (e) {
       log('Failed to sign in: ${e.message}');
       rethrow; // Optionally, rethrow the error to handle it higher up in the call stack
     } catch (e) {
       log('An unexpected error occurred: $e');
-      rethrow;
+      return e.toString();
     }
   }
 

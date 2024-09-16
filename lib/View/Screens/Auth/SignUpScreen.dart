@@ -1,10 +1,10 @@
-import 'package:chat_app/Controller/Modal/userModal.dart';
 import 'package:chat_app/Services/cloudFireStore_Service.dart';
 import 'package:chat_app/main.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:rive/rive.dart';
 
+import '../../../Modal/userModal.dart';
 import '../../../Services/authService.dart';
 import 'SignInScreen.dart';
 
@@ -106,6 +106,31 @@ class SignUpPage extends StatelessWidget {
                         ).hasMatch(email);
                         return emailValid ? null : 'Email is not valid';
                       },
+                    ),
+                    SizedBox(
+                      height: h * 0.02,
+                    ),
+                    TextFormField(
+                      onChanged: signInController.moveEyeBall,
+                      onTap: signInController.isCheckField,
+                      controller: controller.txtPhone,
+                      style: const TextStyle(fontSize: 15),
+                      cursorColor: Colors.blue,
+                      textInputAction: TextInputAction.next,
+                      decoration: InputDecoration(
+
+                        hintText: "Phone",
+                        filled: true,
+                        border: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(15),
+                        ),
+                        focusColor: Colors.blue,
+                        focusedBorder: OutlineInputBorder(
+                          borderSide: const BorderSide(color: Colors.blue),
+                          borderRadius: BorderRadius.circular(15),
+                        ),
+                      ),
+
                     ),
                     SizedBox(
                       height: h * 0.02,
@@ -244,21 +269,23 @@ class SignUpPage extends StatelessWidget {
                       height: h * 0.02,
                     ),
                     GestureDetector(
-                      onTap: ()
-                      async {
+                      onTap: () async {
                         if (controller.txtPassword.text ==
                             controller.txtConfirmPassword.text) {
                           await AuthService.authService
                               .createAccountWithEmailAndPassword(
-                              controller.txtEmail.text,
-                              controller.txtPassword.text);
+                                  controller.txtEmail.text,
+                                  controller.txtPassword.text);
 
                           UserModel user = UserModel(
                               name: controller.txtName.text,
                               email: controller.txtEmail.text,
                               phone: controller.txtPhone.text,
                               token: "-",
-                              image: "https://img.freepik.com/premium-photo/stylish-man-flat-vector-profile-picture-ai-generated_606187-310.jpg");
+                              image:
+                                  "https://img.freepik.com/premium-photo/stylish-man-flat-vector-profile-picture-ai-generated_606187-310.jpg");
+
+                          // AuthService.authService.signOutUser();
 
                           CloudFireStoreService.cloudFireStoreService
                               .insertUserIntoFireStore(user);
@@ -271,20 +298,6 @@ class SignUpPage extends StatelessWidget {
                           controller.txtPhone.clear();
                         }
                       },
-                      // onTap: () {
-                      //
-                      //   AuthService.authService
-                      //       .createAccountWithEmailAndPassword(
-                      //           controller.txtEmail.text,
-                      //           controller.txtPassword.text);
-                      //
-                      //
-                      //   // CloudFireStoreService.cloudFireStoreService
-                      //   //     .insertUserIntoFireStore();
-                      //
-                      //   controller.txtEmail.clear();
-                      //   controller.txtPassword.clear();
-                      // },
                       child: Container(
                         height: h * 0.06,
                         width: w * 0.86,
