@@ -403,6 +403,75 @@ class SignInPage extends StatelessWidget {
                         Obx(
                           () => ElevatedButton(
                             style: ElevatedButton.styleFrom(
+                              backgroundColor: Colors.blue[200],
+                              minimumSize: Size(w * 0.87, h * 0.06),
+                              maximumSize: Size(w * 0.87, h * 0.06),
+                              shape: StadiumBorder(),
+                              textStyle: TextStyle(
+                                fontSize: 24,
+                              ),
+                            ),
+                            onPressed: () async {
+                              if (signInController.formKey.currentState!
+                                  .validate()) {
+                                signInController.isChecking?.value = true;
+                                signInController.isHandsUp?.value = false;
+                                signInController.trigFail?.value = false;
+                                signInController.trigSuccess?.value = true;
+
+                                if (signInController.isSignUp.value) return;
+
+                                signInController.isSignUp.value = true;
+                                String response = await AuthService.authService
+                                    .signInWithEmailAndPassword(
+                                  controller.txtEmail.text,
+                                  controller.txtPassword.text,
+                                );
+                                User? user =
+                                    AuthService.authService.getCurrentUser();
+
+                                if (user != null && response == "Success") {
+                                  Get.offAndToNamed('/home');
+                                } else {
+                                  Get.snackbar(
+                                    'Sign in Invalid',
+                                    'Email or Password may be wrong, $response',
+                                  );
+                                }
+                                signInController.isSignUp.value = false;
+                              } else {
+                                signInController.isChecking?.value = false;
+                                signInController.isHandsUp?.value = false;
+                                signInController.trigFail?.value = true;
+                                signInController.trigSuccess?.value = false;
+                              }
+                            },
+                            child: signInController.isSignUp.value
+                                ? Row(
+                                    mainAxisAlignment: MainAxisAlignment.center,
+                                    children: [
+                                      CircularProgressIndicator(
+                                        color: Colors.white,
+                                      ),
+                                      SizedBox(
+                                        width: w * 0.050,
+                                      ),
+                                      Text(
+                                        'Please wait...',
+                                        style: TextStyle(color: Colors.black),
+                                      ),
+                                    ],
+                                  )
+                                : Text(
+                                    'Login',
+                                    style: TextStyle(color: Colors.black),
+                                  ),
+                          ),
+                        ),
+
+                        /*Obx(
+                          () => ElevatedButton(
+                            style: ElevatedButton.styleFrom(
                                 backgroundColor: Colors.blue[200],
                                 minimumSize: Size(w * 0.87, h * 0.06),
                                 maximumSize: Size(w * 0.87, h * 0.06),
@@ -463,11 +532,11 @@ class SignInPage extends StatelessWidget {
                                     style: TextStyle(color: Colors.black),
                                   ),
                           ),
-                        ),
+                        ),*/
                         SignInButton(
                           Buttons.googleDark,
-                          onPressed: () {
-                            GoogleAuthServices.googleAuthServices
+                          onPressed: () async {
+                            await GoogleAuthServices.googleAuthServices
                                 .signInWithGoogle();
                             User? user =
                                 AuthService.authService.getCurrentUser();
