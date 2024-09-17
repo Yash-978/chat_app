@@ -71,7 +71,7 @@ class SignUpPage extends StatelessWidget {
                           return null;
                         }
                         bool emailValid = RegExp(
-                          r"^[a-zA-Z0-9.a-zA-Z0-9.!#$%&'*+-/=?^_`{|}~]+@[a-zA-Z0-9]+\.[a-zA-Z]+",
+                          r"^[a-zA-Z0-9.a-zA-Z0-9!#$%&'*+-/=?^_`{|}~]+@[a-zA-Z0-9]+\.[a-zA-Z]+",
                         ).hasMatch(email);
                         return emailValid ? null : 'Email is not valid';
                       },
@@ -102,7 +102,7 @@ class SignUpPage extends StatelessWidget {
                           return null;
                         }
                         bool emailValid = RegExp(
-                          r"^[a-zA-Z0-9.a-zA-Z0-9.!#$%&'*+-/=?^_`{|}~]+@[a-zA-Z0-9]+\.[a-zA-Z]+",
+                          r"^[a-zA-Z0-9.a-zA-Z0-9!#$%&'*+-/=?^_`{|}~]+@[a-zA-Z0-9]+\.[a-zA-Z]+",
                         ).hasMatch(email);
                         return emailValid ? null : 'Email is not valid';
                       },
@@ -118,7 +118,6 @@ class SignUpPage extends StatelessWidget {
                       cursorColor: Colors.blue,
                       textInputAction: TextInputAction.next,
                       decoration: InputDecoration(
-
                         hintText: "Phone",
                         filled: true,
                         border: OutlineInputBorder(
@@ -130,7 +129,6 @@ class SignUpPage extends StatelessWidget {
                           borderRadius: BorderRadius.circular(15),
                         ),
                       ),
-
                     ),
                     SizedBox(
                       height: h * 0.01,
@@ -173,9 +171,16 @@ class SignUpPage extends StatelessWidget {
                         if (password == null) {
                           return null;
                         }
+                        /*
+                        bool passwordValid = RegExp(
+                          r"^(?=.*[A-Z])(?=.*[a-z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$",
+                        ).hasMatch(password);
+                        return passwordValid ? null : 'Password is not valid';
+                        */
                         if (password.length < 8) {
                           return "Password must be greater than 8 characters";
                         }
+
                         return null;
                       },
                     ),
@@ -290,6 +295,7 @@ class SignUpPage extends StatelessWidget {
                           CloudFireStoreService.cloudFireStoreService
                               .insertUserIntoFireStore(user);
                           Get.back();
+                          // Get.offAll(const HomePage());
 
                           controller.txtEmail.clear();
                           controller.txtPassword.clear();
@@ -317,33 +323,6 @@ class SignUpPage extends StatelessWidget {
                         ),
                       ),
                     ),
-                    // Obx(
-                    //   () => CheckboxListTile(
-                    //     controlAffinity: ListTileControlAffinity.leading,
-                    //     title: const Text(
-                    //       'By creating an account you agree to our',
-                    //       style: TextStyle(
-                    //         color: Colors.black38,
-                    //       ),
-                    //     ),
-                    //     subtitle: const Text(
-                    //       'Terms & Conditions',
-                    //       style: TextStyle(
-                    //         color: Colors.blue,
-                    //         fontSize: 18,
-                    //         fontWeight: FontWeight.bold,
-                    //       ),
-                    //     ),
-                    //     tileColor: Colors.black,
-                    //     tristate: true,
-                    //     value: signInController.rememberMeCheck.value,
-                    //     activeColor: Colors.blue,
-                    //     onChanged: (value) {
-                    //       (signInController.rememberMeCheck.value =
-                    //           value ?? false);
-                    //     },
-                    //   ),
-                    // ),
                   ],
                 ),
               ),

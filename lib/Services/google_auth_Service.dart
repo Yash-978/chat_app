@@ -1,5 +1,3 @@
-
-
 import 'dart:developer';
 
 import 'package:firebase_auth/firebase_auth.dart';
@@ -26,7 +24,11 @@ class GoogleAuthServices {
       log(userCredential.user!.email!);
       log(userCredential.user!.photoURL!);
     } catch (e) {
-      Get.snackbar('Google Sign Failed', '${e.toString()}');
+      Get.snackbar('Google Sign Failed', e.toString());
     }
+  }
+
+  Future<void> signOutFromGoogle() async {
+    await googleSignIn.signOut();
   }
 }

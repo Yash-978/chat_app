@@ -330,7 +330,7 @@ class SignInPage extends StatelessWidget {
                               return null;
                             }
                             bool emailValid = RegExp(
-                              r"^[a-zA-Z0-9.a-zA-Z0-9.!#$%&'*+-/=?^_`{|}~]+@[a-zA-Z0-9]+\.[a-zA-Z]+",
+                              r"^[a-zA-Z0-9.a-zA-Z0-9!#$%&'*+-/=?^_`{|}~]+@[a-zA-Z0-9]+\.[a-zA-Z]+",
                             ).hasMatch(email);
                             return emailValid ? null : 'Email is not valid';
                           },
@@ -400,187 +400,80 @@ class SignInPage extends StatelessWidget {
                             ),
                           ),
                         ),
-                        ElevatedButton(
-                          style: ElevatedButton.styleFrom(
-                              backgroundColor: Colors.blue[200],
-                              minimumSize: Size(w * 0.87, h * 0.06),
-                              maximumSize: Size(w * 0.87, h * 0.06),
-                              shape: StadiumBorder(),
-                              textStyle: TextStyle(
-                                fontSize: 24,
-                              )),
-                          onPressed: () async {
-                            if (signInController.formKey.currentState!
-                                .validate()) {
-                              signInController.isChecking?.change(false);
-                              signInController.isHandsUp?.change(false);
-                              signInController.trigFail?.change(false);
-                              signInController.trigSuccess?.change(true);
-                            } else {
-                              signInController.isChecking?.change(false);
-                              signInController.isHandsUp?.change(false);
-                              signInController.trigFail?.change(true);
-                              signInController.trigSuccess?.change(false);
-                            }
-                            if (signInController.isSignUp.value) return;
-
-                            signInController.isSignUp = true.obs;
-
-                            String response = await AuthService.authService
-                                .signInWithEmailAndPassword(
-                                    controller.txtEmail.text,
-                                    controller.txtPassword.text);
-                            User? user =
-                                AuthService.authService.getCurrentUser();
-                            if (user != null && response == "Success") {
-                              Get.offAndToNamed('/home');
-                            } else {
-                              Get.snackbar(
-                                'Sign in Invalid',
-                                'Email or Password may be wrong,$response',
-                              );
-                            }
-                          },
-                          child: signInController.isSignUp.value
-                              ? Row(
-                                  mainAxisAlignment: MainAxisAlignment.center,
-                                  children: [
-                                    CircularProgressIndicator(
-                                      color: Colors.white,
-                                    ),
-                                    SizedBox(
-                                      width: w * 0.050,
-                                    ),
-                                    Text(
-                                      'Please wait...',
-                                      style: TextStyle(color: Colors.black),
-                                    ),
-                                  ],
-                                )
-                              : Text(
-                                  'Login',
-                                  style: TextStyle(color: Colors.black),
-                                ),
-                        ),
-
-                        // GestureDetector(
-                        //   onTap: () async {
-                        //     if (signInController.formKey.currentState!
-                        //         .validate()) {
-                        //       signInController.isChecking?.change(false);
-                        //       signInController.isHandsUp?.change(false);
-                        //       signInController.trigFail?.change(false);
-                        //       signInController.trigSuccess?.change(true);
-                        //     } else {
-                        //       signInController.isChecking?.change(false);
-                        //       signInController.isHandsUp?.change(false);
-                        //       signInController.trigFail?.change(true);
-                        //       signInController.trigSuccess?.change(false);
-                        //     }
-                        //
-                        //     String response = await AuthService.authService
-                        //         .signInWithEmailAndPassword(
-                        //             controller.txtEmail.text,
-                        //             controller.txtPassword.text);
-                        //     User? user =
-                        //         AuthService.authService.getCurrentUser();
-                        //     if (user != null && response == "Success") {
-                        //       Get.offAndToNamed('/home');
-                        //     } else {
-                        //       Get.snackbar(
-                        //         'Sign in Invalid',
-                        //         'Email or Password may be wrong,$response',
-                        //       );
-                        //     }
-                        //   },
-                        //   child: Container(
-                        //     height: h * 0.06,
-                        //     width: w * 0.8,
-                        //     decoration: BoxDecoration(
-                        //       borderRadius: BorderRadius.circular(30),
-                        //       color: Colors.blue[200],
-                        //     ),
-                        //     child: const Center(
-                        //       child: Text(
-                        //         "Login",
-                        //         style: TextStyle(
-                        //           fontWeight: FontWeight.bold,
-                        //           fontSize: 18,
-                        //         ),
-                        //       ),
-                        //     ),
-                        //   ),
-                        // ),
-                        /* GestureDetector(
-                          onTap: () async {
-                            try {
-                              // Sign in the user with email and password
-                              await AuthService.authService
-                                  .signInWithEmailAndPassword(
-                                controller.txtEmail.text,
-                                controller.txtPassword.text,
-                              );
-
-                              // Check if the user is signed in
-                              User? user =
-                                  AuthService.authService.getCurrentUser();
-                              if (user != null) {
-                                // Navigate to home screen if sign-in is successful
-                                Get.offAndToNamed('/home');
-                              } else {
-                                // Show an error message if sign-in fails
-                                Get.snackbar('Sign in Invalid',
-                                    'Email or Password may be wrong');
-                              }
-
-                              // Form validation
+                        Obx(
+                          () => ElevatedButton(
+                            style: ElevatedButton.styleFrom(
+                                backgroundColor: Colors.blue[200],
+                                minimumSize: Size(w * 0.87, h * 0.06),
+                                maximumSize: Size(w * 0.87, h * 0.06),
+                                shape: StadiumBorder(),
+                                textStyle: TextStyle(
+                                  fontSize: 24,
+                                )),
+                            onPressed: () async {
                               if (signInController.formKey.currentState!
                                   .validate()) {
-                                // Update controller states
                                 signInController.isChecking?.change(false);
                                 signInController.isHandsUp?.change(false);
                                 signInController.trigFail?.change(false);
                                 signInController.trigSuccess?.change(true);
                               } else {
-                                // Update controller states for failure
                                 signInController.isChecking?.change(false);
                                 signInController.isHandsUp?.change(false);
                                 signInController.trigFail?.change(true);
                                 signInController.trigSuccess?.change(false);
                               }
-                            } catch (e) {
-                              // Handle any errors that occur during sign-in
-                              Get.snackbar(
-                                  'Error', 'An unexpected error occurred: $e');
-                              signInController.isChecking?.change(false);
-                              signInController.isHandsUp?.change(false);
-                              signInController.trigFail?.change(true);
-                              signInController.trigSuccess?.change(false);
-                            }
-                          },
-                          child: Container(
-                            height: h * 0.06,
-                            width: w * 0.8,
-                            decoration: BoxDecoration(
-                              borderRadius: BorderRadius.circular(30),
-                              color: Colors.blue[200],
-                            ),
-                            child: const Center(
-                              child: Text(
-                                "Login",
-                                style: TextStyle(
-                                  fontWeight: FontWeight.bold,
-                                  fontSize: 18,
-                                ),
-                              ),
-                            ),
+                              if (signInController.isSignUp.value) return;
+
+                              signInController.isSignUp = true.obs;
+
+                              String response = await AuthService.authService
+                                  .signInWithEmailAndPassword(
+                                      controller.txtEmail.text,
+                                      controller.txtPassword.text);
+                              User? user =
+                                  AuthService.authService.getCurrentUser();
+                              if (user != null && response == "Success") {
+                                Get.offAndToNamed('/home');
+                              } else {
+                                Get.snackbar(
+                                  'Sign in Invalid',
+                                  'Email or Password may be wrong,$response',
+                                );
+                              }
+                            },
+                            child: signInController.isSignUp.value
+                                ? Row(
+                                    mainAxisAlignment: MainAxisAlignment.center,
+                                    children: [
+                                      CircularProgressIndicator(
+                                        color: Colors.white,
+                                      ),
+                                      SizedBox(
+                                        width: w * 0.050,
+                                      ),
+                                      Text(
+                                        'Please wait...',
+                                        style: TextStyle(color: Colors.black),
+                                      ),
+                                    ],
+                                  )
+                                : Text(
+                                    'Login',
+                                    style: TextStyle(color: Colors.black),
+                                  ),
                           ),
-                        ),*/
+                        ),
                         SignInButton(
                           Buttons.googleDark,
                           onPressed: () {
                             GoogleAuthServices.googleAuthServices
                                 .signInWithGoogle();
+                            User? user =
+                                AuthService.authService.getCurrentUser();
+                            if (user != null) {
+                              Get.offAndToNamed('/home');
+                            }
                           },
                         ),
                       ],

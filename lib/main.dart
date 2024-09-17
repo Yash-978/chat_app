@@ -6,6 +6,7 @@ import 'package:get/get.dart';
 
 import 'View/Screens/Auth/SignInScreen.dart';
 import 'View/Screens/Auth/SignUpScreen.dart';
+import 'View/Screens/ChatScreen/chatScreen.dart';
 import 'View/Screens/HomeScreen/homeScreen.dart';
 
 Future<void> main() async {
@@ -39,6 +40,10 @@ class MyApp extends StatelessWidget {
         GetPage(
           name: '/home',
           page: () => const HomePage(),
+        ),
+        GetPage(
+          name: '/chat',
+          page: () => const ChatPage(),
         ),
       ],
     );

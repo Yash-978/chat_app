@@ -41,6 +41,7 @@ class AuthService {
 */
 import 'dart:developer';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:get/get.dart';
 
 class AuthService {
   AuthService._();
@@ -58,6 +59,7 @@ class AuthService {
       log('User created successfully: $email');
     } on FirebaseAuthException catch (e) {
       log('Failed to create account: ${e.message}');
+      Get.snackbar('Registration Problem', 'Account already register');
       rethrow; // Optionally, rethrow the error to handle it higher up in the call stack
     } catch (e) {
       log('An unexpected error occurred: $e');

@@ -1,3 +1,4 @@
+import 'package:chat_app/Modal/chatModal.dart';
 import 'package:chat_app/Services/authService.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -16,7 +17,7 @@ class CloudFireStoreService {
     await fireStore.collection("users").doc(user.email).set({
       'name': user.name,
       'email': user.email,
-      'token': "--",
+      'token': user.token,
       'image': user.image,
       'phone': user.phone,
     });
@@ -26,5 +27,50 @@ class CloudFireStoreService {
       readCurrentUserFromFireStore() async {
     User? user = AuthService.authService.getCurrentUser();
     return await fireStore.collection("users").doc(user!.email).get();
+  }
+
+  //READ ALL USER FROM FIRE STORE
+
+  Future<QuerySnapshot<Map<String, dynamic>>>
+      readAllUserCloudFireStore() async {
+    User? user = AuthService.authService.getCurrentUser();
+    return await fireStore
+        .collection("users")
+        .where("email", isNotEqualTo: user!.email)
+        .get();
+  }
+
+/*
+  * add chat in fireStore
+  * chatroom ->user->chat-> list chat
+  * sender_receiver
+  * joint
+  * in this case we will just replace the sender at the same time so it can be change accordingly
+  * */
+
+  Future<void> addChatInFireStore(ChatModel chat) async {
+    String? sender = chat.sender;
+    String? receiver = chat.receiver;
+    List doc = [sender, receiver];
+    doc.sort();
+    String docId = doc.join("_");
+    await fireStore
+        .collection("chatroom")
+        .doc(docId)
+        .collection("chat")
+        .add(chat.toMap(chat));
+  }
+
+  Stream<QuerySnapshot<Map<String, dynamic>>> readChatFromFireStore(
+      String receiver) {
+    String sender = AuthService.authService.getCurrentUser()!.email!;
+    List doc = [sender, receiver];
+    doc.sort();
+    String docId = doc.join("_");
+    return fireStore
+        .collection("chatroom")
+        .doc(docId)
+        .collection("chat")
+        .snapshots();
   }
 }

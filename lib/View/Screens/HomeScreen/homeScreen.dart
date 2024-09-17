@@ -1,3 +1,4 @@
+import 'package:chat_app/Controller/chatController.dart';
 import 'package:chat_app/Modal/userModal.dart';
 import 'package:chat_app/Services/authService.dart';
 import 'package:chat_app/Services/cloudFireStore_Service.dart';
@@ -5,6 +6,10 @@ import 'package:chat_app/Services/cloudFireStore_Service.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+
+import '../../../Services/google_auth_Service.dart';
+
+ChatController chatController = Get.put(ChatController());
 
 class HomePage extends StatelessWidget {
   const HomePage({super.key});
@@ -31,9 +36,11 @@ class HomePage extends StatelessWidget {
             return Column(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                CircleAvatar(
-                  radius: 40,
-                  backgroundImage: NetworkImage(userModel.image!),
+                DrawerHeader(
+                  child: CircleAvatar(
+                    radius: 40,
+                    backgroundImage: NetworkImage(userModel.image!),
+                  ),
                 ),
                 Text(userModel.name!),
                 Text(userModel.email!),
@@ -49,7 +56,7 @@ class HomePage extends StatelessWidget {
           IconButton(
               onPressed: () async {
                 await AuthService.authService.signOutUser();
-                // await GoogleAuthServices.googleAuthServices.si
+                await GoogleAuthServices.googleAuthServices.signOutFromGoogle();
                 User? user = AuthService.authService.getCurrentUser();
                 if (user == null) {
                   Get.offAndToNamed('/signIn');
@@ -57,6 +64,48 @@ class HomePage extends StatelessWidget {
               },
               icon: Icon(Icons.logout_rounded))
         ],
+      ),
+      body: FutureBuilder(
+        future: CloudFireStoreService.cloudFireStoreService
+            .readAllUserCloudFireStore(),
+        builder: (context, snapshot) {
+          if (snapshot.hasError) {
+            return Center(
+              child: Text(snapshot.error.toString()),
+            );
+          }
+          if (snapshot.connectionState == ConnectionState.waiting) {
+            return Center(
+              child: CircularProgressIndicator(),
+            );
+          }
+          List data = snapshot.data!.docs;
+          List<UserModel> userList = [];
+          for (var user in data) {
+            userList.add(
+              UserModel.fromMap(
+                user.data(),
+              ),
+            );
+          }
+          return ListView.builder(
+            itemCount: userList.length,
+            itemBuilder: (context, index) {
+              return ListTile(
+                onTap: () {
+                  chatController.getReceiver(
+                      userList[index].email!, userList[index].name!);
+                  Get.toNamed('/chat');
+                },
+                leading: CircleAvatar(
+                  backgroundImage: NetworkImage(userList[index].image!),
+                ),
+                title: Text(userList[index].name!),
+                subtitle: Text(userList[index].email!),
+              );
+            },
+          );
+        },
       ),
     );
   }
