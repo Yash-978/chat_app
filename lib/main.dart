@@ -8,6 +8,7 @@ import 'View/Screens/Auth/SignInScreen.dart';
 import 'View/Screens/Auth/SignUpScreen.dart';
 import 'View/Screens/ChatScreen/chatScreen.dart';
 import 'View/Screens/HomeScreen/homeScreen.dart';
+import 'View/Screens/SplashScreen/splash.dart';
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -25,6 +26,10 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return GetMaterialApp(debugShowCheckedModeBanner: false,
       getPages: [
+        GetPage(
+          name: '/',
+          page: () => const SplashPage(),
+        ),
         GetPage(
           name: '/',
           page: () => const AuthManager(),
