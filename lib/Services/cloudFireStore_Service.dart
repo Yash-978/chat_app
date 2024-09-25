@@ -1,3 +1,7 @@
+
+
+import 'dart:developer';
+
 import 'package:chat_app/Modal/chatModal.dart';
 import 'package:chat_app/Services/authService.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
@@ -71,6 +75,51 @@ class CloudFireStoreService {
         .collection("chatroom")
         .doc(docId)
         .collection("chat")
+        .orderBy("time", descending: false)
         .snapshots();
+  }
+
+  //data will update according to docId
+  Future<void> updateChat(String receiver, String message, String dcId) async {
+    String sender = AuthService.authService.getCurrentUser()!.email!;
+    List doc = [sender, receiver];
+    doc.sort();
+    String docId = doc.join("_");
+    await fireStore
+        .collection("chatroom")
+        .doc(docId)
+        .collection("chat")
+        .doc(dcId)
+        .update(
+      {'message': message},
+    );
+  }
+
+  Future<void> removeChat(String dcId, String receiver) async {
+    String sender = AuthService.authService.getCurrentUser()!.email!;
+    List doc = [sender, receiver];
+    doc.sort();
+    String docId = doc.join("_");
+    await fireStore
+        .collection("chatroom")
+        .doc(docId)
+        .collection("chat")
+        .doc(dcId)
+        .delete();
+  }
+
+  Future<void> changeOnlineStatus(bool status) async {
+    String email = AuthService.authService.getCurrentUser()!.email!;
+    await fireStore.collection("users").doc(email).update(
+      {'isOnline': status},
+    );
+    final snapshot = await fireStore.collection("users").doc(email).get();
+    Map? user = snapshot.data();
+    log("user online status :$status: ${user!['isOnline']}");
+  }
+
+  Stream<DocumentSnapshot<Map<String, dynamic>>> findUserIsOnlineOrNot(
+      String email) {
+    return fireStore.collection("users").doc(email).snapshots();
   }
 }

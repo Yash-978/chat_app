@@ -11,9 +11,37 @@ import '../../../Services/google_auth_Service.dart';
 
 ChatController chatController = Get.put(ChatController());
 
-class HomePage extends StatelessWidget {
+class HomePage extends StatefulWidget {
   const HomePage({super.key});
 
+  @override
+  State<HomePage> createState() => _HomePageState();
+}
+
+class _HomePageState extends State<HomePage> {
+  @override
+  void initState() {
+
+    super.initState();
+    CloudFireStoreService.cloudFireStoreService.changeOnlineStatus(true);
+
+  }
+  @override
+  void dispose() {
+
+    super.dispose();
+    print('----------------dispose-----------------------');
+    CloudFireStoreService.cloudFireStoreService.changeOnlineStatus(false);
+
+  }
+  @override
+  void deactivate() {
+
+    super.deactivate();
+    print('---------------deactivate-------------');
+    CloudFireStoreService.cloudFireStoreService.changeOnlineStatus(false);
+
+  }
   @override
   Widget build(BuildContext context) {
     return Scaffold(

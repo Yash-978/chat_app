@@ -35,9 +35,10 @@ class SplashPage extends StatelessWidget {
             Text(
               'Chat App',
               style: TextStyle(
-                  fontWeight: FontWeight.bold,
-                  fontSize: 30,
-                  color: Colors.white,),
+                fontWeight: FontWeight.bold,
+                fontSize: 30,
+                color: Colors.white,
+              ),
             )
           ],
         ),
