@@ -1,3 +1,4 @@
+import 'package:chat_app/Services/local_notification_service.dart';
 import 'package:chat_app/View/Screens/Auth/authManager.dart';
 import 'package:chat_app/firebase_options.dart';
 import 'package:firebase_core/firebase_core.dart';
@@ -15,6 +16,7 @@ Future<void> main() async {
   await Firebase.initializeApp(
     options: DefaultFirebaseOptions.currentPlatform,
   );
+  await LocalNotificationService.notificationService.initNotificationService();
 
   runApp(const MyApp());
 }

@@ -1,6 +1,7 @@
 import 'package:chat_app/Modal/chatModal.dart';
 import 'package:chat_app/Services/authService.dart';
 import 'package:chat_app/Services/cloudFireStore_Service.dart';
+import 'package:chat_app/Services/local_notification_service.dart';
 import 'package:chat_app/View/Screens/HomeScreen/homeScreen.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
@@ -20,7 +21,9 @@ class ChatPage extends StatelessWidget {
           mainAxisSize: MainAxisSize.min,
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Text(chatController.receiverName.value,),
+            Text(
+              chatController.receiverName.value,
+            ),
             StreamBuilder(
               stream: CloudFireStoreService.cloudFireStoreService
                   .findUserIsOnlineOrNot(chatController.receiverEmail.value),
@@ -171,6 +174,10 @@ class ChatPage extends StatelessWidget {
                           time: Timestamp.now());
                       await CloudFireStoreService.cloudFireStoreService
                           .addChatInFireStore(chat);
+                      await LocalNotificationService.notificationService
+                          .showNotification(
+                              AuthService.authService.getCurrentUser()!.email!,
+                              chatController.txtMessage.text);
                       chatController.txtMessage.clear();
                     },
                     icon: Icon(Icons.send)),
