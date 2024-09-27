@@ -2,6 +2,7 @@ import 'package:chat_app/Controller/chatController.dart';
 import 'package:chat_app/Modal/userModal.dart';
 import 'package:chat_app/Services/authService.dart';
 import 'package:chat_app/Services/cloudFireStore_Service.dart';
+import 'package:chat_app/Services/local_notification_service.dart';
 
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
@@ -21,27 +22,24 @@ class HomePage extends StatefulWidget {
 class _HomePageState extends State<HomePage> {
   @override
   void initState() {
-
     super.initState();
     CloudFireStoreService.cloudFireStoreService.changeOnlineStatus(true);
-
   }
+
   @override
   void dispose() {
-
     super.dispose();
     print('----------------dispose-----------------------');
     CloudFireStoreService.cloudFireStoreService.changeOnlineStatus(false);
-
   }
+
   @override
   void deactivate() {
-
     super.deactivate();
     print('---------------deactivate-------------');
     CloudFireStoreService.cloudFireStoreService.changeOnlineStatus(false);
-
   }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -83,6 +81,12 @@ class _HomePageState extends State<HomePage> {
         actions: [
           IconButton(
               onPressed: () async {
+                await LocalNotificationService.notificationService
+                    .scheduledNotification();
+              },
+              icon: const Icon(Icons.notifications_active)),
+          IconButton(
+              onPressed: () async {
                 await AuthService.authService.signOutUser();
                 await GoogleAuthServices.googleAuthServices.signOutFromGoogle();
                 User? user = AuthService.authService.getCurrentUser();
@@ -90,7 +94,7 @@ class _HomePageState extends State<HomePage> {
                   Get.offAndToNamed('/signIn');
                 }
               },
-              icon: Icon(Icons.logout_rounded))
+              icon: Icon(Icons.logout_rounded)),
         ],
       ),
       body: FutureBuilder(

@@ -10,12 +10,15 @@ import 'View/Screens/Auth/SignUpScreen.dart';
 import 'View/Screens/ChatScreen/chatScreen.dart';
 import 'View/Screens/HomeScreen/homeScreen.dart';
 import 'View/Screens/SplashScreen/splash.dart';
+import 'package:timezone/data/latest_all.dart' as tz;
+import 'package:timezone/timezone.dart' as tz;
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp(
     options: DefaultFirebaseOptions.currentPlatform,
   );
+  tz.initializeTimeZones();
   await LocalNotificationService.notificationService.initNotificationService();
 
   runApp(const MyApp());
