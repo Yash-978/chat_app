@@ -1,3 +1,4 @@
+import 'package:chat_app/Services/firebase_messaging_service.dart';
 import 'package:chat_app/Services/local_notification_service.dart';
 import 'package:chat_app/View/Screens/Auth/authManager.dart';
 import 'package:chat_app/firebase_options.dart';
@@ -11,7 +12,7 @@ import 'View/Screens/ChatScreen/chatScreen.dart';
 import 'View/Screens/HomeScreen/homeScreen.dart';
 import 'View/Screens/SplashScreen/splash.dart';
 import 'package:timezone/data/latest_all.dart' as tz;
-import 'package:timezone/timezone.dart' as tz;
+// import 'package:timezone/timezone.dart' as tz;
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -20,6 +21,8 @@ Future<void> main() async {
   );
   tz.initializeTimeZones();
   await LocalNotificationService.notificationService.initNotificationService();
+  await FirebaseMessagingService.fm.requestPermission();
+  await FirebaseMessagingService.fm.getDeviceToken();
 
   runApp(const MyApp());
 }
@@ -29,7 +32,8 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return GetMaterialApp(debugShowCheckedModeBanner: false,
+    return GetMaterialApp(
+      debugShowCheckedModeBanner: false,
       getPages: [
         GetPage(
           name: '/',

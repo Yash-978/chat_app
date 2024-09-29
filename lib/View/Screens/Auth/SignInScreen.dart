@@ -468,71 +468,6 @@ class SignInPage extends StatelessWidget {
                                   ),
                           ),
                         ),
-
-                        /*Obx(
-                          () => ElevatedButton(
-                            style: ElevatedButton.styleFrom(
-                                backgroundColor: Colors.blue[200],
-                                minimumSize: Size(w * 0.87, h * 0.06),
-                                maximumSize: Size(w * 0.87, h * 0.06),
-                                shape: StadiumBorder(),
-                                textStyle: TextStyle(
-                                  fontSize: 24,
-                                )),
-                            onPressed: () async {
-                              if (signInController.formKey.currentState!
-                                  .validate()) {
-                                signInController.isChecking?.change(false);
-                                signInController.isHandsUp?.change(false);
-                                signInController.trigFail?.change(false);
-                                signInController.trigSuccess?.change(true);
-                              } else {
-                                signInController.isChecking?.change(false);
-                                signInController.isHandsUp?.change(false);
-                                signInController.trigFail?.change(true);
-                                signInController.trigSuccess?.change(false);
-                              }
-                              if (signInController.isSignUp.value) return;
-
-                              signInController.isSignUp = true.obs;
-
-                              String response = await AuthService.authService
-                                  .signInWithEmailAndPassword(
-                                      controller.txtEmail.text,
-                                      controller.txtPassword.text);
-                              User? user =
-                                  AuthService.authService.getCurrentUser();
-                              if (user != null && response == "Success") {
-                                Get.offAndToNamed('/home');
-                              } else {
-                                Get.snackbar(
-                                  'Sign in Invalid',
-                                  'Email or Password may be wrong,$response',
-                                );
-                              }
-                            },
-                            child: signInController.isSignUp.value
-                                ? Row(
-                                    mainAxisAlignment: MainAxisAlignment.center,
-                                    children: [
-                                      CircularProgressIndicator(
-                                        color: Colors.white,
-                                      ),
-                                      SizedBox(
-                                        width: w * 0.050,
-                                      ),
-                                      Text(
-                                        'Please wait...',
-                                        style: TextStyle(color: Colors.black),
-                                      ),
-                                    ],
-                                  )
-                                : Text(
-                                    'Login',
-                                    style: TextStyle(color: Colors.black),
-                                  ),
-                          ),
-                        ),*/
                         SignInButton(
                           Buttons.googleDark,
                           onPressed: () async {
@@ -554,24 +489,7 @@ class SignInPage extends StatelessWidget {
             SizedBox(
               height: h * 0.1,
             ),
-            // Container(
-            //   width: w * 0.7,
-            //   height: h * 0.065,
-            //   decoration: BoxDecoration(
-            //     gradient: LinearGradient(
-            //       begin: Alignment(1.00, 0.00),
-            //       end: Alignment(-1, 0),
-            //       colors: [Color(0xFFFF9945), Color(0xFFFC6076)],
-            //     ),
-            //   ),
-            //   child: Text(
-            //     "Login",
-            //     style: TextStyle(
-            //       fontWeight: FontWeight.bold,
-            //       fontSize: 18,
-            //     ),
-            //   ),
-            // ),
+
             Row(
               mainAxisAlignment: MainAxisAlignment.center,
               mainAxisSize: MainAxisSize.max,

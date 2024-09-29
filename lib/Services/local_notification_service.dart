@@ -102,4 +102,5 @@ Future<void> scheduledNotification() async {
 * make unique id for it which is used as like condition statement (for eg reminder in which is check the any special event for upcoming notification ) that means if select 0 as for certain amount of time than the notification will only for that time only
 *
 * */
+
 }

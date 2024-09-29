@@ -9,15 +9,15 @@ class SplashPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    Timer(Duration(seconds: 4), () {
+    Timer(const Duration(seconds: 4), () {
       Navigator.of(context).pushReplacement(MaterialPageRoute(
-        builder: (context) => AuthManager(),
+        builder: (context) => const AuthManager(),
       ));
     });
     double h = MediaQuery.of(context).size.height;
     double w = MediaQuery.of(context).size.width;
     return Scaffold(
-      backgroundColor: Color(0xffAEADB2),
+      backgroundColor: const Color(0xffAEADB2),
       // Colors.white,
       body: Center(
         child: Column(

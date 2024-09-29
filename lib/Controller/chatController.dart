@@ -5,6 +5,7 @@ import 'package:get/get.dart';
 class ChatController extends GetxController {
   RxString receiverEmail = "".obs;
   RxString receiverName = "".obs;
+  RxString image = "".obs;
 
   TextEditingController txtMessage = TextEditingController();
   TextEditingController txtUpdateMessage = TextEditingController();
@@ -14,17 +15,19 @@ class ChatController extends GetxController {
     receiverEmail.value = email;
   }
 
+  void getImage(String url) {
+    image.value = url;
+  }
+
   @override
   void onInit() {
-
     super.onInit();
     CloudFireStoreService.cloudFireStoreService.changeOnlineStatus(true);
   }
+
   @override
   void onClose() {
-
     super.onClose();
     CloudFireStoreService.cloudFireStoreService.changeOnlineStatus(false);
-
   }
 }

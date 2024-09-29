@@ -2,13 +2,55 @@ import 'package:chat_app/Modal/chatModal.dart';
 import 'package:chat_app/Services/authService.dart';
 import 'package:chat_app/Services/cloudFireStore_Service.dart';
 import 'package:chat_app/Services/local_notification_service.dart';
+import 'package:chat_app/Services/storage_service.dart';
 import 'package:chat_app/View/Screens/HomeScreen/homeScreen.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
-class ChatPage extends StatelessWidget {
+FocusNode myFocusNode = FocusNode();
+
+class ChatPage extends StatefulWidget {
   const ChatPage({super.key});
+
+  @override
+  State<ChatPage> createState() => _ChatPageState();
+}
+
+class _ChatPageState extends State<ChatPage> {
+  // void initState() {
+  //   super.initState();
+  //   myFocusNode.addListener(
+  //     () {
+  //       if (myFocusNode.hasFocus) {
+  //         Future.delayed(
+  //           const Duration(milliseconds: 500),
+  //           () => scrollDown(),
+  //         );
+  //       }
+  //     },
+  //   );
+  //   Future.delayed(
+  //     const Duration(milliseconds: 500),
+  //     () => scrollDown(),
+  //   );
+  // }
+
+  // void dispose() {
+  //   myFocusNode.dispose();
+  //   chatController.txtMessage.dispose();
+  //   super.dispose();
+  // }
+
+  final ScrollController scrollController = ScrollController();
+
+  // void scrollDown() {
+  //   scrollController.animateTo(
+  //     scrollController.position.maxScrollExtent,
+  //     duration: const Duration(seconds: 1),
+  //     curve: Curves.fastOutSlowIn,
+  //   );
+  // }
 
   @override
   Widget build(BuildContext context) {
@@ -16,7 +58,7 @@ class ChatPage extends StatelessWidget {
     double w = MediaQuery.of(context).size.width;
     return Scaffold(
       appBar: AppBar(
-        // scrolledUnderElevation: 0.1,
+        scrolledUnderElevation: 0.1,
         title: Column(
           mainAxisSize: MainAxisSize.min,
           crossAxisAlignment: CrossAxisAlignment.start,
@@ -84,10 +126,7 @@ class ChatPage extends StatelessWidget {
                           ),
                           child: GestureDetector(
                             onLongPress: () {
-                              if (chatList[index].sender ==
-                                  AuthService.authService
-                                      .getCurrentUser()!
-                                      .email!) {
+                              if (isSender) {
                                 chatController.txtUpdateMessage =
                                     TextEditingController(
                                         text: chatList[index].message);
@@ -123,10 +162,7 @@ class ChatPage extends StatelessWidget {
                               }
                             },
                             onDoubleTap: () {
-                              if (chatList[index].sender ==
-                                  AuthService.authService
-                                      .getCurrentUser()!
-                                      .email!) {
+                              if (isSender) {
                                 CloudFireStoreService.cloudFireStoreService
                                     .removeChat(docIdList[index],
                                         chatController.receiverEmail.value);
@@ -146,12 +182,17 @@ class ChatPage extends StatelessWidget {
                                     isSender ? Colors.blue : Colors.grey[300],
                                 borderRadius: BorderRadius.circular(12),
                               ),
-                              child: Text(
-                                chatList[index].message!,
-                                style: TextStyle(
-                                  color: isSender ? Colors.white : Colors.black,
-                                ),
-                              ),
+                              child: (chatList[index].image!.isEmpty &&
+                                      chatList[index].image == "")
+                                  ? Text(
+                                      chatList[index].message!,
+                                      style: TextStyle(
+                                        color: isSender
+                                            ? Colors.white
+                                            : Colors.black,
+                                      ),
+                                    )
+                                  : Image.network(chatList[index].image!),
                             ),
                           ),
                         ),
@@ -164,26 +205,49 @@ class ChatPage extends StatelessWidget {
             TextField(
               controller: chatController.txtMessage,
               decoration: InputDecoration(
-                suffixIcon: IconButton(
-                    onPressed: () async {
-                      ChatModel chat = ChatModel(
-                          sender:
-                              AuthService.authService.getCurrentUser()!.email,
-                          receiver: chatController.receiverEmail.value,
-                          message: chatController.txtMessage.text,
-                          time: Timestamp.now());
-                      await CloudFireStoreService.cloudFireStoreService
-                          .addChatInFireStore(chat);
-                      await LocalNotificationService.notificationService
-                          .showNotification(
-                              AuthService.authService.getCurrentUser()!.email!,
-                              chatController.txtMessage.text);
-                      chatController.txtMessage.clear();
-                    },
-                    icon: Icon(Icons.send)),
-                border: OutlineInputBorder(
-                  borderRadius: BorderRadius.circular(15),
+                suffixIcon: Row(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    IconButton(
+                        onPressed: () async {
+                          String url =
+                              await StorageService.service.uploadImage();
+                          chatController.getImage(url);
+                        },
+                        icon: Icon(Icons.image)),
+                    IconButton(
+                        onPressed: () async {
+                          ChatModel chat = ChatModel(
+                              image: chatController.image.value,
+                              sender: AuthService.authService
+                                  .getCurrentUser()!
+                                  .email,
+                              receiver: chatController.receiverEmail.value,
+                              message: chatController.txtMessage.text,
+                              time: Timestamp.now());
+                          await CloudFireStoreService.cloudFireStoreService
+                              .addChatInFireStore(chat);
+                          await LocalNotificationService.notificationService
+                              .showNotification(
+                                  AuthService.authService
+                                      .getCurrentUser()!
+                                      .email!,
+                                  chatController.txtMessage.text);
+                          chatController.txtMessage.clear();
+                          chatController.getImage("");
+                        },
+                        icon: Icon(Icons.send)),
+                  ],
                 ),
+                hintText: 'Type a message!',
+                border: OutlineInputBorder(
+                  borderRadius: BorderRadius.circular(20.0),
+                  borderSide: const BorderSide(
+                    width: 0,
+                    style: BorderStyle.none,
+                  ),
+                ),
+                contentPadding: const EdgeInsets.all(10),
               ),
             ),
           ],
