@@ -40,7 +40,7 @@ class MyApp extends StatelessWidget {
           page: () => const SplashPage(),
         ),
         GetPage(
-          name: '/',
+          name: '/auth',
           page: () => const AuthManager(),
         ),
         GetPage(

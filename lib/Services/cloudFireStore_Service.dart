@@ -24,6 +24,10 @@ class CloudFireStoreService {
       'token': user.token,
       'image': user.image,
       'phone': user.phone,
+      'read':user.read,
+      'typing':user.typing,
+      'isOnline':user.isOnline,
+      'timestamp':user.timestamp ,
     });
   }
 
@@ -121,5 +125,42 @@ class CloudFireStoreService {
   Stream<DocumentSnapshot<Map<String, dynamic>>> findUserIsOnlineOrNot(
       String email) {
     return fireStore.collection("users").doc(email).snapshots();
+  }
+  // Future<void> toggleOnlineStatus(
+  //     bool status, Timestamp timestamp, bool isTyping) async {
+  //   String email = AuthService.authService.getCurrentUser()!.email!;
+  //   await fireStore.collection("users").doc(email).update({
+  //     'isOnline': status,
+  //     'timestamp': timestamp,
+  //     'isTyping': isTyping,
+  //   });
+  // }
+  //
+  Stream<DocumentSnapshot<Map<String, dynamic>>> checkUserIsOnlineOrNot(
+      String email) {
+    return fireStore.collection("users").doc(email).snapshots();
+  }
+
+
+  Future<void> updateLastSeen() async {
+    String email = AuthService.authService.getCurrentUser()!.email!;
+    await fireStore.collection("users").doc(email).update({
+      'timestamp': Timestamp.now(),
+    });
+  }
+
+
+  Future<void> toggleOnlineStatus(bool status) async {
+    String email = AuthService.authService.getCurrentUser()!.email!;
+    await fireStore.collection("users").doc(email).update({
+      'isOnline': status,
+    });
+  }
+
+  Future<void> toggleTypingStatus(bool status) async {
+    String email = AuthService.authService.getCurrentUser()!.email!;
+    await fireStore.collection("users").doc(email).update({
+      'typing': status,
+    });
   }
 }

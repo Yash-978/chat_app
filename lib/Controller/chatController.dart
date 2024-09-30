@@ -6,6 +6,7 @@ class ChatController extends GetxController {
   RxString receiverEmail = "".obs;
   RxString receiverName = "".obs;
   RxString image = "".obs;
+  RxString messageStore = ''.obs;
 
   TextEditingController txtMessage = TextEditingController();
   TextEditingController txtUpdateMessage = TextEditingController();

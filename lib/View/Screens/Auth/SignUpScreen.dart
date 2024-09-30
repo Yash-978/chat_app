@@ -1,4 +1,5 @@
 import 'package:chat_app/Services/cloudFireStore_Service.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
@@ -282,7 +283,10 @@ class SignUpPage extends StatelessWidget {
                                   controller.txtEmail.text,
                                   controller.txtPassword.text);
 
-                          UserModel user = UserModel(
+                          UserModel user = UserModel(read: false,
+                            isOnline: false,
+                              typing: false,
+                              timestamp: Timestamp.now(),
                               name: controller.txtName.text,
                               email: controller.txtEmail.text,
                               phone: controller.txtPhone.text,
