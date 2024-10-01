@@ -145,6 +145,8 @@ class _HomePageState extends State<HomePage> {
 }
 */
 
+import 'dart:ui';
+
 import 'package:chat_app/Controller/chatController.dart';
 import 'package:chat_app/Modal/userModal.dart';
 import 'package:chat_app/Services/authService.dart';
@@ -154,8 +156,10 @@ import 'package:chat_app/Services/local_notification_service.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:rive/rive.dart' as r;
 
 import '../../../Services/google_auth_Service.dart';
+import '../../../Utils/global.dart';
 
 ChatController chatController = Get.put(ChatController());
 
@@ -166,9 +170,8 @@ class HomePage extends StatefulWidget {
   State<HomePage> createState() => _HomePageState();
 }
 
-class _HomePageState extends State<HomePage> with WidgetsBindingObserver{
+class _HomePageState extends State<HomePage> with WidgetsBindingObserver {
   @override
-
   @override
   void initState() {
     super.initState();
@@ -189,8 +192,8 @@ class _HomePageState extends State<HomePage> with WidgetsBindingObserver{
     } else if (state == AppLifecycleState.resumed) {
       CloudFireStoreService.cloudFireStoreService.toggleOnlineStatus(true);
     }
-
   }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -271,23 +274,73 @@ class _HomePageState extends State<HomePage> with WidgetsBindingObserver{
               ),
             );
           }
-          return ListView.builder(
-            itemCount: userList.length,
-            itemBuilder: (context, index) {
-              return ListTile(
-                onTap: () {
-                  chatController.getReceiver(
-                      userList[index].email!, userList[index].name!);
-                  Get.toNamed('/chat');
-                },
-                leading: CircleAvatar(
-                  backgroundImage: NetworkImage(userList[index].image!),
-                ),
-                title: Text(userList[index].name!),
-                subtitle: Text(userList[index].email!),
-              );
-            },
-          );
+          return Stack(children: [
+            Positioned.fill(
+              child: BackdropFilter(
+                filter: ImageFilter.blur(sigmaY: 5, sigmaX: 5),
+                child: SizedBox(),
+              ),
+            ),
+            r.RiveAnimation.asset(
+              'assets/Animations/shapes.riv',
+              fit: BoxFit.fill,
+            ),
+            ListView.builder(
+              itemCount: userList.length,
+              itemBuilder: (context, index) {
+                return Column(mainAxisSize: MainAxisSize.min,
+                  children: [
+                    Padding(
+                      padding: const EdgeInsets.only(bottom: 8.0),
+                      child: ListTile(
+                        title: Text(
+                          userList[index].name!,
+                          style: const TextStyle(
+                            fontSize: 18,
+                          ),
+                        ),
+                        subtitle: Padding(
+                          padding: const EdgeInsets.only(top: 6.0),
+                          child: Text(
+                            userList[index].email!,
+                            style: const TextStyle(fontSize: 15),
+                          ),
+                        ),
+                        leading: CircleAvatar(
+                          backgroundImage: NetworkImage(
+                            userList[index].image!,
+                          ),
+                          radius: 30,
+                        ),
+                        trailing: Text(
+                          "5 pm",
+                          style: const TextStyle(
+                            color: Colors.grey,
+                            fontSize: 13,
+                          ),
+                        ),
+                      ),
+                    ),
+                    // Divider(color: dividerColor, indent: 85),
+                  ],
+                );
+                  /*Card(
+                  child: ListTile(
+                    onTap: () {
+                      chatController.getReceiver(
+                          userList[index].email!, userList[index].name!);
+                      Get.toNamed('/chat');
+                    },
+                    leading: CircleAvatar(
+                      backgroundImage: NetworkImage(userList[index].image!),
+                    ),
+                    title: Text(userList[index].name!),
+                    subtitle: Text(userList[index].email!),
+                  ),
+                );*/
+              },
+            ),
+          ]);
         },
       ),
     );

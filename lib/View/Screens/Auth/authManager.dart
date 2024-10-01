@@ -12,7 +12,8 @@ class AuthManager extends StatelessWidget {
   Widget build(BuildContext context) {
     return (AuthService.authService.getCurrentUser() == null)
         ?  const SignInPage()
-        :  const NavigationMenu() ;
+        :  const BottomNavWithAnimatedIcons();
+        // :  const NavigationMenu() ;
   }
 }
 

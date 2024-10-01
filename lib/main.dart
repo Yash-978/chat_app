@@ -8,6 +8,7 @@ import 'package:get/get.dart';
 
 import 'View/Screens/Auth/SignInScreen.dart';
 import 'View/Screens/Auth/SignUpScreen.dart';
+import 'View/Screens/BottomNavigation/bottomNavigationbar.dart';
 import 'View/Screens/ChatScreen/chatScreen.dart';
 import 'View/Screens/HomeScreen/homeScreen.dart';
 import 'View/Screens/SplashScreen/splash.dart';
@@ -34,6 +35,8 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return GetMaterialApp(
       debugShowCheckedModeBanner: false,
+      home: BottomNavWithAnimatedIcons(),
+
       getPages: [
         GetPage(
           name: '/',
