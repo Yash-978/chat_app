@@ -16,24 +16,23 @@ class StatusPage extends StatelessWidget {
           Positioned(
             // height: 100,
             bottom: 200,
-            width: w*1.7,
+            width: w * 1.7,
             left: 100,
             child: Image.asset("assets/images/Spline.png"),
           ),
           Positioned.fill(
             child: BackdropFilter(
-              filter: ImageFilter.blur(sigmaY: 20,sigmaX: 10),
+              filter: ImageFilter.blur(sigmaY: 20, sigmaX: 10),
               child: SizedBox(),
             ),
           ),
           r.RiveAnimation.asset('assets/Animations/shapes.riv'),
           Positioned.fill(
             child: BackdropFilter(
-              filter: ImageFilter.blur(sigmaY: 30,sigmaX: 30),
+              filter: ImageFilter.blur(sigmaY: 30, sigmaX: 30),
               child: SizedBox(),
             ),
           ),
-
           // Positioned.fill(
           //
           //   child: BackdropFilter(

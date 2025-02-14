@@ -7,6 +7,7 @@ import 'package:rive/rive.dart';
 
 import '../../../Modal/userModal.dart';
 import '../../../Services/authService.dart';
+import '../../../Utils/global.dart';
 import 'SignInScreen.dart';
 
 class SignUpPage extends StatelessWidget {
@@ -14,355 +15,364 @@ class SignUpPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    double WIDTH=500;
     double h = MediaQuery.of(context).size.height;
     double w = MediaQuery.of(context).size.width;
     return Scaffold(
       backgroundColor: Colors.grey.shade200,
-      body: ListView(
+      body: Stack(
         children: [
-          SizedBox(
-            height: h * 0.35,
-            child: RiveAnimation.asset(
-              "assets/Animations/animated_login_character.riv",
-              stateMachines: const ["Login Machine"],
-              onInit: signInController.onInitStateMachine,
-            ),
+          CustomPaint(
+            size: Size(WIDTH, (WIDTH*2.2222222222222223).toDouble()), //You can Replace [WIDTH] with your desired width for Custom Paint and height will be calculated automatically
+            painter: RPSCustomPainter(),
           ),
-          Padding(
-            padding: const EdgeInsets.all(8.0),
-            child: Container(
-              width: w * 0.9,
-              alignment: Alignment.center,
-              decoration: BoxDecoration(
-                boxShadow: const [
-                  BoxShadow(
-                    color: Colors.black12,
-                    spreadRadius: 5,
-                    blurRadius: 10,
-                  ),
-                ],
-                color: Colors.white,
-                borderRadius: BorderRadius.circular(10),
+          ListView(
+            children: [
+              SizedBox(
+                height: h * 0.35,
+                child: RiveAnimation.asset(
+                  "assets/Animations/animated_login_character.riv",
+                  stateMachines: const ["Login Machine"],
+                  onInit: signInController.onInitStateMachine,
+                ),
               ),
-              child: Padding(
-                padding:
+              Padding(
+                padding: const EdgeInsets.all(8.0),
+                child: Container(
+                  width: w * 0.9,
+                  alignment: Alignment.center,
+                  decoration: BoxDecoration(
+                    boxShadow: const [
+                      BoxShadow(
+                        color: Colors.black12,
+                        spreadRadius: 5,
+                        blurRadius: 10,
+                      ),
+                    ],
+                    color: Colors.white,
+                    borderRadius: BorderRadius.circular(10),
+                  ),
+                  child: Padding(
+                    padding:
                     const EdgeInsets.symmetric(horizontal: 15, vertical: 20),
-                child: Column(
-                  children: [
-                    TextFormField(
-                      onChanged: signInController.moveEyeBall,
-                      onTap: signInController.isCheckField,
-                      controller: controller.txtName,
-                      style: const TextStyle(fontSize: 15),
-                      cursorColor: Colors.blue,
-                      decoration: InputDecoration(
-                        hintText: "Name",
-                        filled: true,
-                        border: OutlineInputBorder(
-                          borderRadius: BorderRadius.circular(15),
+                    child: Column(
+                      children: [
+                        TextFormField(
+                          onChanged: signInController.moveEyeBall,
+                          onTap: signInController.isCheckField,
+                          controller: controller.txtName,
+                          style: const TextStyle(fontSize: 15),
+                          cursorColor: Colors.blue,
+                          decoration: InputDecoration(
+                            hintText: "Name",
+                            filled: true,
+                            border: OutlineInputBorder(
+                              borderRadius: BorderRadius.circular(15),
+                            ),
+                            focusColor: Colors.blue,
+                            focusedBorder: OutlineInputBorder(
+                              borderSide: const BorderSide(color: Colors.blue),
+                              borderRadius: BorderRadius.circular(15),
+                            ),
+                          ),
+                          validator: (String? email) {
+                            if (email == null) {
+                              return null;
+                            }
+                            bool emailValid = RegExp(
+                              r"^[a-zA-Z0-9.a-zA-Z0-9!#$%&'*+-/=?^_`{|}~]+@[a-zA-Z0-9]+\.[a-zA-Z]+",
+                            ).hasMatch(email);
+                            return emailValid ? null : 'Email is not valid';
+                          },
                         ),
-                        focusColor: Colors.blue,
-                        focusedBorder: OutlineInputBorder(
-                          borderSide: const BorderSide(color: Colors.blue),
-                          borderRadius: BorderRadius.circular(15),
+                        SizedBox(
+                          height: h * 0.01,
                         ),
-                      ),
-                      validator: (String? email) {
-                        if (email == null) {
-                          return null;
-                        }
-                        bool emailValid = RegExp(
-                          r"^[a-zA-Z0-9.a-zA-Z0-9!#$%&'*+-/=?^_`{|}~]+@[a-zA-Z0-9]+\.[a-zA-Z]+",
-                        ).hasMatch(email);
-                        return emailValid ? null : 'Email is not valid';
-                      },
-                    ),
-                    SizedBox(
-                      height: h * 0.01,
-                    ),
-                    TextFormField(
-                      onChanged: signInController.moveEyeBall,
-                      onTap: signInController.isCheckField,
-                      controller: controller.txtEmail,
-                      style: const TextStyle(fontSize: 15),
-                      cursorColor: Colors.blue,
-                      decoration: InputDecoration(
-                        hintText: "Email",
-                        filled: true,
-                        border: OutlineInputBorder(
-                          borderRadius: BorderRadius.circular(15),
+                        TextFormField(
+                          onChanged: signInController.moveEyeBall,
+                          onTap: signInController.isCheckField,
+                          controller: controller.txtEmail,
+                          style: const TextStyle(fontSize: 15),
+                          cursorColor: Colors.blue,
+                          decoration: InputDecoration(
+                            hintText: "Email",
+                            filled: true,
+                            border: OutlineInputBorder(
+                              borderRadius: BorderRadius.circular(15),
+                            ),
+                            focusColor: Colors.blue,
+                            focusedBorder: OutlineInputBorder(
+                              borderSide: const BorderSide(color: Colors.blue),
+                              borderRadius: BorderRadius.circular(15),
+                            ),
+                          ),
+                          validator: (String? email) {
+                            if (email == null) {
+                              return null;
+                            }
+                            bool emailValid = RegExp(
+                              r"^[a-zA-Z0-9.a-zA-Z0-9!#$%&'*+-/=?^_`{|}~]+@[a-zA-Z0-9]+\.[a-zA-Z]+",
+                            ).hasMatch(email);
+                            return emailValid ? null : 'Email is not valid';
+                          },
                         ),
-                        focusColor: Colors.blue,
-                        focusedBorder: OutlineInputBorder(
-                          borderSide: const BorderSide(color: Colors.blue),
-                          borderRadius: BorderRadius.circular(15),
+                        SizedBox(
+                          height: h * 0.01,
                         ),
-                      ),
-                      validator: (String? email) {
-                        if (email == null) {
-                          return null;
-                        }
-                        bool emailValid = RegExp(
-                          r"^[a-zA-Z0-9.a-zA-Z0-9!#$%&'*+-/=?^_`{|}~]+@[a-zA-Z0-9]+\.[a-zA-Z]+",
-                        ).hasMatch(email);
-                        return emailValid ? null : 'Email is not valid';
-                      },
-                    ),
-                    SizedBox(
-                      height: h * 0.01,
-                    ),
-                    TextFormField(
-                      onChanged: signInController.moveEyeBall,
-                      onTap: signInController.isCheckField,
-                      controller: controller.txtPhone,
-                      style: const TextStyle(fontSize: 15),
-                      cursorColor: Colors.blue,
-                      textInputAction: TextInputAction.next,
-                      decoration: InputDecoration(
-                        hintText: "Phone",
-                        filled: true,
-                        border: OutlineInputBorder(
-                          borderRadius: BorderRadius.circular(15),
+                        TextFormField(
+                          onChanged: signInController.moveEyeBall,
+                          onTap: signInController.isCheckField,
+                          controller: controller.txtPhone,
+                          style: const TextStyle(fontSize: 15),
+                          cursorColor: Colors.blue,
+                          textInputAction: TextInputAction.next,
+                          decoration: InputDecoration(
+                            hintText: "Phone",
+                            filled: true,
+                            border: OutlineInputBorder(
+                              borderRadius: BorderRadius.circular(15),
+                            ),
+                            focusColor: Colors.blue,
+                            focusedBorder: OutlineInputBorder(
+                              borderSide: const BorderSide(color: Colors.blue),
+                              borderRadius: BorderRadius.circular(15),
+                            ),
+                          ),
                         ),
-                        focusColor: Colors.blue,
-                        focusedBorder: OutlineInputBorder(
-                          borderSide: const BorderSide(color: Colors.blue),
-                          borderRadius: BorderRadius.circular(15),
+                        SizedBox(
+                          height: h * 0.01,
                         ),
-                      ),
-                    ),
-                    SizedBox(
-                      height: h * 0.01,
-                    ),
-                    TextFormField(
-                      onTap: () {
-                        signInController.hidePassword();
-                        signInController.obscure.value =
+                        TextFormField(
+                          onTap: () {
+                            signInController.hidePassword();
+                            signInController.obscure.value =
                             !signInController.obscure.value;
-                      },
-                      controller: controller.txtPassword,
-                      obscureText: signInController.obscure.value,
-                      style: const TextStyle(fontSize: 15),
-                      cursorColor: Colors.blue,
-                      decoration: InputDecoration(
-                        hintText: "Password",
-                        filled: true,
-                        suffixIcon: Obx(
-                          () => Icon(
-                            signInController.obscure.value
-                                ? Icons.visibility_off
-                                : Icons.visibility,
-                            color: signInController.obscure.value
-                                ? Colors.blue
-                                : Colors.black,
+                          },
+                          controller: controller.txtPassword,
+                          obscureText: signInController.obscure.value,
+                          style: const TextStyle(fontSize: 15),
+                          cursorColor: Colors.blue,
+                          decoration: InputDecoration(
+                            hintText: "Password",
+                            filled: true,
+                            suffixIcon: Obx(
+                                  () => Icon(
+                                signInController.obscure.value
+                                    ? Icons.visibility_off
+                                    : Icons.visibility,
+                                color: signInController.obscure.value
+                                    ? Colors.blue
+                                    : Colors.black,
+                              ),
+                            ),
+                            border: OutlineInputBorder(
+                              borderRadius: BorderRadius.circular(15),
+                            ),
+                            focusColor: Colors.blue,
+                            focusedBorder: OutlineInputBorder(
+                              borderSide: const BorderSide(
+                                color: Colors.blue,
+                              ),
+                              borderRadius: BorderRadius.circular(15),
+                            ),
                           ),
-                        ),
-                        border: OutlineInputBorder(
-                          borderRadius: BorderRadius.circular(15),
-                        ),
-                        focusColor: Colors.blue,
-                        focusedBorder: OutlineInputBorder(
-                          borderSide: const BorderSide(
-                            color: Colors.blue,
-                          ),
-                          borderRadius: BorderRadius.circular(15),
-                        ),
-                      ),
-                      validator: (String? password) {
-                        if (password == null) {
-                          return null;
-                        }
-                        /*
+                          validator: (String? password) {
+                            if (password == null) {
+                              return null;
+                            }
+                            /*
                         bool passwordValid = RegExp(
                           r"^(?=.*[A-Z])(?=.*[a-z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$",
                         ).hasMatch(password);
                         return passwordValid ? null : 'Password is not valid';
                         */
-                        if (password.length < 8) {
-                          return "Password must be greater than 8 characters";
-                        }
+                            if (password.length < 8) {
+                              return "Password must be greater than 8 characters";
+                            }
 
-                        return null;
-                      },
-                    ),
-                    SizedBox(
-                      height: h * 0.01,
-                    ),
-                    TextFormField(
-                      onTap: () {
-                        signInController.hidePassword();
-                        signInController.obscure.value =
+                            return null;
+                          },
+                        ),
+                        SizedBox(
+                          height: h * 0.01,
+                        ),
+                        TextFormField(
+                          onTap: () {
+                            signInController.hidePassword();
+                            signInController.obscure.value =
                             !signInController.obscure.value;
-                      },
-                      controller: controller.txtConfirmPassword,
-                      obscureText: signInController.obscure.value,
-                      style: const TextStyle(fontSize: 15),
-                      cursorColor: Colors.blue,
-                      decoration: InputDecoration(
-                        hintText: "Confirm Password",
-                        filled: true,
-                        suffixIcon: Obx(
-                          () => Icon(
-                            signInController.obscure.value
-                                ? Icons.visibility_off
-                                : Icons.visibility,
-                            color: signInController.obscure.value
-                                ? Colors.blue
-                                : Colors.black,
-                          ),
-                        ),
-                        border: OutlineInputBorder(
-                          borderRadius: BorderRadius.circular(15),
-                        ),
-                        focusColor: Colors.blue,
-                        focusedBorder: OutlineInputBorder(
-                          borderSide: const BorderSide(
-                            color: Colors.blue,
-                          ),
-                          borderRadius: BorderRadius.circular(15),
-                        ),
-                      ),
-                      validator: (String? password) {
-                        if (password == null) {
-                          return null;
-                        }
-                        if (password.length < 8) {
-                          return "Password must be greater than 8 characters";
-                        }
-                        return null;
-                      },
-                    ),
-                    SizedBox(
-                      height: h * 0.01,
-                    ),
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.start,
-                      children: [
-                        Obx(
-                          () => Checkbox(
-                            checkColor: Colors.white,
-                            activeColor: Colors.blue,
-                            tristate: true,
-                            value: signInController.rememberMeCheck.value,
-                            onChanged: (value) {
-                              (signInController.rememberMeCheck.value =
-                                  value ?? false);
-                            },
-                          ),
-                        ),
-                        const Column(
-                          mainAxisAlignment: MainAxisAlignment.start,
-                          children: [
-                            Text(
-                              'By creating an account you agree to our',
-                              style: TextStyle(
-                                color: Colors.black45,
+                          },
+                          controller: controller.txtConfirmPassword,
+                          obscureText: signInController.obscure.value,
+                          style: const TextStyle(fontSize: 15),
+                          cursorColor: Colors.blue,
+                          decoration: InputDecoration(
+                            hintText: "Confirm Password",
+                            filled: true,
+                            suffixIcon: Obx(
+                                  () => Icon(
+                                signInController.obscure.value
+                                    ? Icons.visibility_off
+                                    : Icons.visibility,
+                                color: signInController.obscure.value
+                                    ? Colors.blue
+                                    : Colors.black,
                               ),
                             ),
-                            Text(
-                              'Terms & Conditions',
-                              style: TextStyle(
+                            border: OutlineInputBorder(
+                              borderRadius: BorderRadius.circular(15),
+                            ),
+                            focusColor: Colors.blue,
+                            focusedBorder: OutlineInputBorder(
+                              borderSide: const BorderSide(
                                 color: Colors.blue,
-                                fontSize: 18,
-                                fontWeight: FontWeight.bold,
                               ),
+                              borderRadius: BorderRadius.circular(15),
+                            ),
+                          ),
+                          validator: (String? password) {
+                            if (password == null) {
+                              return null;
+                            }
+                            if (password.length < 8) {
+                              return "Password must be greater than 8 characters";
+                            }
+                            return null;
+                          },
+                        ),
+                        SizedBox(
+                          height: h * 0.01,
+                        ),
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.start,
+                          children: [
+                            Obx(
+                                  () => Checkbox(
+                                checkColor: Colors.white,
+                                activeColor: Colors.blue,
+                                tristate: true,
+                                value: signInController.rememberMeCheck.value,
+                                onChanged: (value) {
+                                  (signInController.rememberMeCheck.value =
+                                      value ?? false);
+                                },
+                              ),
+                            ),
+                            const Column(
+                              mainAxisAlignment: MainAxisAlignment.start,
+                              children: [
+                                Text(
+                                  'By creating an account you agree to our',
+                                  style: TextStyle(
+                                    color: Colors.black45,
+                                  ),
+                                ),
+                                Text(
+                                  'Terms & Conditions',
+                                  style: TextStyle(
+                                    color: Colors.blue,
+                                    fontSize: 18,
+                                    fontWeight: FontWeight.bold,
+                                  ),
+                                ),
+                              ],
                             ),
                           ],
                         ),
-                      ],
-                    ),
-                    SizedBox(
-                      height: h * 0.02,
-                    ),
-                    GestureDetector(
-                      onTap: () async {
-                        if (controller.txtPassword.text ==
-                            controller.txtConfirmPassword.text) {
-                          await AuthService.authService
-                              .createAccountWithEmailAndPassword(
+                        SizedBox(
+                          height: h * 0.02,
+                        ),
+                        GestureDetector(
+                          onTap: () async {
+                            if (controller.txtPassword.text ==
+                                controller.txtConfirmPassword.text) {
+                              await AuthService.authService
+                                  .createAccountWithEmailAndPassword(
                                   controller.txtEmail.text,
                                   controller.txtPassword.text);
 
-                          UserModel user = UserModel(read: false,
-                            isOnline: false,
-                              typing: false,
-                              timestamp: Timestamp.now(),
-                              name: controller.txtName.text,
-                              email: controller.txtEmail.text,
-                              phone: controller.txtPhone.text,
-                              token: "-",
-                              image:
+                              UserModel user = UserModel(read: false,
+                                  isOnline: false,
+                                  typing: false,
+                                  timestamp: Timestamp.now(),
+                                  name: controller.txtName.text,
+                                  email: controller.txtEmail.text,
+                                  phone: controller.txtPhone.text,
+                                  token: "-",
+                                  image:
                                   "https://img.freepik.com/premium-photo/stylish-man-flat-vector-profile-picture-ai-generated_606187-310.jpg");
 
-                          AuthService.authService.signOutUser();
+                              AuthService.authService.signOutUser();
 
-                          CloudFireStoreService.cloudFireStoreService
-                              .insertUserIntoFireStore(user);
-                          Get.back();
-                          // Get.offAll(const HomePage());
+                              CloudFireStoreService.cloudFireStoreService
+                                  .insertUserIntoFireStore(user);
+                              Get.back();
+                              // Get.offAll(const HomePage());
 
-                          controller.txtEmail.clear();
-                          controller.txtPassword.clear();
-                          controller.txtName.clear();
-                          controller.txtConfirmPassword.clear();
-                          controller.txtPhone.clear();
-                        }
-                      },
-                      child: Container(
-                        height: h * 0.06,
-                        width: w * 0.86,
-                        decoration: BoxDecoration(
-                          borderRadius: BorderRadius.circular(30),
-                          color: Colors.blue[200],
-                        ),
-                        child: const Center(
-                          child: Text(
-                            'Register',
-                            style: TextStyle(
-                              color: Colors.black,
-                              fontWeight: FontWeight.bold,
-                              fontSize: 19,
+                              controller.txtEmail.clear();
+                              controller.txtPassword.clear();
+                              controller.txtName.clear();
+                              controller.txtConfirmPassword.clear();
+                              controller.txtPhone.clear();
+                            }
+                          },
+                          child: Container(
+                            height: h * 0.06,
+                            width: w * 0.86,
+                            decoration: BoxDecoration(
+                              borderRadius: BorderRadius.circular(30),
+                              color: Colors.blue[200],
+                            ),
+                            child: const Center(
+                              child: Text(
+                                'Register',
+                                style: TextStyle(
+                                  color: Colors.black,
+                                  fontWeight: FontWeight.bold,
+                                  fontSize: 19,
+                                ),
+                              ),
                             ),
                           ),
                         ),
-                      ),
+                      ],
                     ),
-                  ],
-                ),
-              ),
-            ),
-          ),
-          SizedBox(
-            height: h * 0.025,
-          ),
-          Row(
-            mainAxisAlignment: MainAxisAlignment.center,
-            mainAxisSize: MainAxisSize.max,
-            children: [
-              const Text(
-                "Already have an account?",
-                style: TextStyle(
-                  color: Color(0xFFb8b8b8),
-                ),
-              ),
-              TextButton(
-                child: const Text(
-                  "Login",
-                  style: TextStyle(
-                    color: Colors.blue,
-                    fontWeight: FontWeight.bold,
-                    fontSize: 16,
                   ),
                 ),
-                onPressed: () {
-                  // Navigator.pop(context);
-                  Get.back();
-                },
+              ),
+              SizedBox(
+                height: h * 0.025,
+              ),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                mainAxisSize: MainAxisSize.max,
+                children: [
+                  const Text(
+                    "Already have an account?",
+                    style: TextStyle(
+                      color: Color(0xFFb8b8b8),
+                    ),
+                  ),
+                  TextButton(
+                    child: const Text(
+                      "Login",
+                      style: TextStyle(
+                        color: Colors.blue,
+                        fontWeight: FontWeight.bold,
+                        fontSize: 16,
+                      ),
+                    ),
+                    onPressed: () {
+                      // Navigator.pop(context);
+                      Get.back();
+                    },
+                  ),
+                ],
               ),
             ],
           ),
         ],
-      ),
+      )
     );
   }
 }

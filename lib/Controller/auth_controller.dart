@@ -12,6 +12,7 @@ class AuthController extends GetxController {
   final TextEditingController txtPhone = TextEditingController();
 }
 
+
 class SignInController extends GetxController {
   final GlobalKey<FormState> formKey = GlobalKey<FormState>();
   RxBool obscure = false.obs;

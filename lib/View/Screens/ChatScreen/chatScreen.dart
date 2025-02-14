@@ -331,6 +331,8 @@ import 'package:get/get.dart';
 import 'package:intl/intl.dart';
 import 'package:rive/rive.dart' as r;
 
+import '../../../Utils/global.dart';
+
 FocusNode myFocusNode = FocusNode();
 
 class ChatPage extends StatefulWidget {
@@ -343,6 +345,7 @@ class ChatPage extends StatefulWidget {
 class _ChatPageState extends State<ChatPage> {
   @override
   Widget build(BuildContext context) {
+    double WIDTH = 500;
     double h = MediaQuery.of(context).size.height;
     double w = MediaQuery.of(context).size.width;
     return Scaffold(
@@ -370,14 +373,13 @@ class _ChatPageState extends State<ChatPage> {
                   }
                   // // lastSeen = user!['timestamp'].toDate();
                   // // nightDay = lastSeen!.hour >= 12 ? 'PM' : 'AM';
-
                   return Text(
                     user['isOnline']
                         ? (user['typing'])
                             ? 'Typing...'
                             : 'Online'
                         : 'Last seen at ${DateFormat('hh:mm a').format(user['timestamp'].toDate())}',
-                    style: TextStyle(color: Colors.black,fontSize: 12),
+                    style: TextStyle(color: Colors.black, fontSize: 12),
                   );
                 })
           ],
@@ -396,13 +398,22 @@ class _ChatPageState extends State<ChatPage> {
           //   left: 100,
           //   child: Image.asset("assets/images/Spline.png"),
           // ),
-          Positioned.fill(
-            child: BackdropFilter(
-              filter: ImageFilter.blur(sigmaY: 5, sigmaX: 5),
-              child: SizedBox(),
-            ),
+          CustomPaint(
+            size: Size(WIDTH, (WIDTH * 2.2222222222222223).toDouble()),
+            //You can Replace [WIDTH] with your desired width for Custom Paint and height will be calculated automatically
+            painter: RPSCustomPainter(),
           ),
-          r.RiveAnimation.asset('assets/Animations/shapes.riv',fit: BoxFit.fill,),
+
+          // Positioned.fill(
+          //   child: BackdropFilter(
+          //     filter: ImageFilter.blur(sigmaY: 5, sigmaX: 5),
+          //     child: SizedBox(),
+          //   ),
+          // ),
+          r.RiveAnimation.asset(
+            'assets/Animations/shapes.riv',
+            fit: BoxFit.fill,
+          ),
           // Positioned.fill(
           //   child: BackdropFilter(
           //     filter: ImageFilter.blur(sigmaY: 5, sigmaX: 5),
@@ -508,7 +519,8 @@ class _ChatPageState extends State<ChatPage> {
                                           actions: [
                                             TextButton(
                                                 onPressed: () async {
-                                                  String dcId = docIdList[index];
+                                                  String dcId =
+                                                      docIdList[index];
                                                   await CloudFireStoreService
                                                       .cloudFireStoreService
                                                       .updateChat(
@@ -545,8 +557,9 @@ class _ChatPageState extends State<ChatPage> {
                                     horizontal: 1,
                                   ),
                                   decoration: BoxDecoration(
-                                    color:
-                                        isSender ? Colors.blue : Colors.grey[300],
+                                    color: isSender
+                                        ? Colors.blue
+                                        : Colors.grey[300],
                                     borderRadius: BorderRadius.circular(12),
                                   ),
                                   child: (chatList[index].image!.isEmpty &&
@@ -604,12 +617,15 @@ class _ChatPageState extends State<ChatPage> {
                                     sender: AuthService.authService
                                         .getCurrentUser()!
                                         .email,
-                                    receiver: chatController.receiverEmail.value,
+                                    receiver:
+                                        chatController.receiverEmail.value,
                                     message: chatController.txtMessage.text,
                                     time: Timestamp.now());
-                                await CloudFireStoreService.cloudFireStoreService
+                                await CloudFireStoreService
+                                    .cloudFireStoreService
                                     .addChatInFireStore(chat);
-                                await LocalNotificationService.notificationService
+                                await LocalNotificationService
+                                    .notificationService
                                     .showNotification(
                                         AuthService.authService
                                             .getCurrentUser()!

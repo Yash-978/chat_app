@@ -1,5 +1,3 @@
-
-
 import 'dart:developer';
 
 import 'package:chat_app/Modal/chatModal.dart';
@@ -24,10 +22,10 @@ class CloudFireStoreService {
       'token': user.token,
       'image': user.image,
       'phone': user.phone,
-      'read':user.read,
-      'typing':user.typing,
-      'isOnline':user.isOnline,
-      'timestamp':user.timestamp ,
+      'read': user.read,
+      'typing': user.typing,
+      'isOnline': user.isOnline,
+      'timestamp': user.timestamp,
     });
   }
 
@@ -126,6 +124,7 @@ class CloudFireStoreService {
       String email) {
     return fireStore.collection("users").doc(email).snapshots();
   }
+
   // Future<void> toggleOnlineStatus(
   //     bool status, Timestamp timestamp, bool isTyping) async {
   //   String email = AuthService.authService.getCurrentUser()!.email!;
@@ -141,14 +140,12 @@ class CloudFireStoreService {
     return fireStore.collection("users").doc(email).snapshots();
   }
 
-
   Future<void> updateLastSeen() async {
     String email = AuthService.authService.getCurrentUser()!.email!;
     await fireStore.collection("users").doc(email).update({
       'timestamp': Timestamp.now(),
     });
   }
-
 
   Future<void> toggleOnlineStatus(bool status) async {
     String email = AuthService.authService.getCurrentUser()!.email!;

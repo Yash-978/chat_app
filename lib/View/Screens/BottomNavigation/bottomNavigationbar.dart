@@ -1,20 +1,34 @@
 import 'package:chat_app/View/Screens/StatusScreen/statusPage.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/physics.dart';
 import 'package:get/get.dart';
 import 'package:rive/rive.dart';
 
+import '../../../Utils/global.dart';
 import '../CallScreen/callPage.dart';
 import '../HomeScreen/homeScreen.dart';
 import '../ProfileScreen/ProfilePage.dart';
+import '../SideMenu/sideMenu.dart';
+
+late AnimationController? _animationController;
+
+late Animation<double> _sidebarAnim;
 
 var bottomNavigationBgColor = const Color(0xff17203A);
+
 int selectedNavIndex = 0;
+Widget _tabBody = Container(color: Colors.white,);
 final List<Widget> Screen = <Widget>[
   const HomePage(),
   const StatusPage(),
   const CallPage(),
   const ProfilePage(),
 ];
+final springDesc = SpringDescription(
+  mass: 0.1,
+  stiffness: 40,
+  damping: 5,
+);
 
 List<SMIBool> riveIconInput = [];
 
@@ -26,9 +40,11 @@ class BottomNavWithAnimatedIcons extends StatefulWidget {
       _BottomNavWithAnimatedIconsState();
 }
 
-class _BottomNavWithAnimatedIconsState
-    extends State<BottomNavWithAnimatedIcons> {
+class _BottomNavWithAnimatedIconsState extends State<BottomNavWithAnimatedIcons>
+    with TickerProviderStateMixin {
   List<StateMachineController?> controllers = [];
+
+  late SMIBool _menuBtn;
 
   void animateTheIcon(int index) {
     riveIconInput[index].change(true);
@@ -45,10 +61,44 @@ class _BottomNavWithAnimatedIconsState
     riveIconInput.add(stmController.findInput<bool>("active") as SMIBool);
   }
 
+  void _onMenuIconInit(Artboard artboard) {
+    final controller =
+        StateMachineController.fromArtboard(artboard, "State Machine");
+    artboard.addController(controller!);
+    _menuBtn = controller.findInput<bool>("isOpen") as SMIBool;
+    _menuBtn.value = true;
+  }
+
+  void onMenuPress() {
+    if (_menuBtn.value) {
+      final springAnim = SpringSimulation(springDesc, 0, 1, 0);
+      _animationController?.animateWith(springAnim);
+    } else {
+      _animationController?.reverse();
+    }
+    _menuBtn.change(!_menuBtn.value);
+  }
+
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+
+    _animationController = AnimationController(
+      duration: const Duration(milliseconds: 200),
+      upperBound: 1,
+      vsync: this,
+    );
+    _sidebarAnim = Tween<double>(begin: 0, end: 1).animate(
+      CurvedAnimation(parent: _animationController!, curve: Curves.linear),
+    );
+    _tabBody = Screen.first;
+  }
+
   @override
   void dispose() {
-    // TODO: implement dispose
     super.dispose();
+    _animationController?.dispose();
     for (var controller in controllers) {
       controller?.dispose();
     }
@@ -57,8 +107,47 @@ class _BottomNavWithAnimatedIconsState
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: Screen[selectedNavIndex],
+      extendBody: true,
+      body: Stack(
+        children: [
+          SideMenu(),
+          AnimatedBuilder(
+            animation: _sidebarAnim,
+            builder: (context, child) {
+              return Transform.translate(
+                  offset: Offset(_sidebarAnim.value * 265, 0), child: child);
+            },
+            child: _tabBody,
+          ),
+          SafeArea(
+            child: GestureDetector(
+              onTap: onMenuPress,
+              child: Container(
+                height: 44,
+                width: 44,
+                margin: EdgeInsets.all(16),
+                decoration: BoxDecoration(
+                    borderRadius: BorderRadius.circular(44 / 2),
+                    boxShadow: [
+                      BoxShadow(
+                        color: Color(0xff18213A).withOpacity(0.2),
+                        blurRadius: 4,
+                        offset: Offset(0, 5),
+                      ),
+                    ]),
+                child: RiveAnimation.asset(
+                  "assets/Animations/menu_button.riv",
+                  stateMachines: ["State Machine"],
+                  animations: ["open", "close"],
+                  onInit: _onMenuIconInit,
+                ),
+              ),
+            ),
+          )
+        ],
+      ),
       bottomNavigationBar: SafeArea(
+
         child: Container(
           height: 56,
           padding: const EdgeInsets.all(5),
@@ -86,9 +175,8 @@ class _BottomNavWithAnimatedIconsState
                   return GestureDetector(
                     onTap: () {
                       animateTheIcon(index);
-
                       setState(() {
-                        selectedNavIndex = index;
+                        _tabBody = Screen[index];
                       });
                     },
                     child: Column(
@@ -125,137 +213,3 @@ class _BottomNavWithAnimatedIconsState
     );
   }
 }
-
-class RiveModel {
-  final String src, artboard, stateMachineName;
-
-  RiveModel({
-    required this.src,
-    required this.artboard,
-    required this.stateMachineName,
-  });
-
-  set setStatus(SMIBool state) {
-    state = state;
-  }
-}
-
-class NavItemModel {
-  final String title;
-  final RiveModel rive;
-
-  NavItemModel({
-    required this.title,
-    required this.rive,
-  });
-}
-
-List<NavItemModel> bottomNavItems = [
-  NavItemModel(
-    title: "Chat",
-    rive: RiveModel(
-      src: "assets/Animations/icons.riv",
-      artboard: "CHAT",
-      stateMachineName: "CHAT_Interactivity",
-    ),
-  ),
-  NavItemModel(
-    title: "Search",
-    rive: RiveModel(
-      src: "assets/Animations/icons.riv",
-      artboard: "SEARCH",
-      stateMachineName: "SEARCH_Interactivity",
-    ),
-  ),
-  // NavItemModel(
-  //   title: "Timer",
-  //   rive: RiveModel(
-  //     src: "assets/Animations/icons.riv",
-  //     artboard: "TIMER",
-  //     stateMachineName: "TIMER_Interactivity",
-  //   ),
-  // ),
-  NavItemModel(
-    title: "Notification",
-    rive: RiveModel(
-      src: "assets/Animations/icons.riv",
-      artboard: "BELL",
-      stateMachineName: "BELL_Interactivity",
-    ),
-  ),
-  NavItemModel(
-    title: "Profile",
-    rive: RiveModel(
-      src: "assets/Animations/icons.riv",
-      artboard: "USER",
-      stateMachineName: "USER_Interactivity",
-    ),
-  ),
-];
-
-class AnimatedBar extends StatelessWidget {
-  const AnimatedBar({super.key, required this.isActive});
-
-  final bool isActive;
-
-  @override
-  Widget build(BuildContext context) {
-    return AnimatedContainer(
-      duration: const Duration(
-        milliseconds: 200,
-      ),
-      margin: const EdgeInsets.only(bottom: 2),
-      height: 4,
-      width: isActive ? 20 : 0,
-      decoration: const BoxDecoration(
-        color: Color(0xff81B4FF),
-        borderRadius: BorderRadius.all(
-          Radius.circular(12),
-        ),
-      ),
-    );
-  }
-}
-/*
-final navController = Get.put(NavigationController());
-
-class NavigationController extends GetxController {
-  final Rx<int> selectedIndex = 0.obs;
-
-  final Screen = [
-    HomePage(),
-    StatusPage(),
-    CallPage(),
-    ProfilePage(),
-  ];
-}
-
-class NavigationMenu extends StatelessWidget {
-  const NavigationMenu({super.key});
-
-  @override
-  Widget build(BuildContext context) {
-
-    return Scaffold(
-      bottomNavigationBar: Obx(
-        () => NavigationBar(
-          height: 80,
-          elevation: 0,
-          selectedIndex: navController.selectedIndex.value,
-          onDestinationSelected: (index) =>
-          navController.selectedIndex.value = index,
-          destinations: [
-            NavigationDestination(icon: Icon(Icons.chat), label: 'Home'),
-            NavigationDestination(
-                icon: Icon(Icons.favorite_border), label: 'Status'),
-            NavigationDestination(icon: Icon(Icons.call), label: 'Call'),
-            NavigationDestination(icon: Icon(Icons.person), label: 'Profile'),
-          ],
-        ),
-      ),
-      body: Obx(() => navController.Screen[navController.selectedIndex.value]),
-    );
-  }
-}
-
-*/
